@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans;
+    background-image:
+      radial-gradient(1200px 600px at 80% -10%, rgba(155, 191, 216, 0.35), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(199, 220, 235, 0.45), transparent 60%);
+    background-color: theme("colors.paper.DEFAULT");
+  }
+
+  ::selection {
+    background: theme("colors.sky.200");
+    color: theme("colors.navy.900");
+  }
+}
+
+@layer components {
+  .grain-overlay {
+    @apply pointer-events-none fixed inset-0 z-[1] opacity-[0.07] mix-blend-multiply bg-paper-grain;
+  }
+
+  .heading-serif {
+    @apply font-serif font-semibold tracking-[-0.01em] text-navy-900;
+  }
+}

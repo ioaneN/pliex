@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pliex — Your AI Business Assistant</title>
+  <meta name="description" content="Pliex turns messy business operations into one simple AI-powered system. Track money, see insights, get recommendations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#" class="brand">
+        <span class="brand-mark">P</span>
+        <span class="brand-name">Pliex</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#about">About</a>
+      </nav>
+      <div class="nav-cta">
+        <a href="dashboard.html" class="btn btn-ghost">Sign in</a>
+        <a href="dashboard.html" class="btn btn-primary">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">
+            <span class="dot"></span>
+            AI for small business
+          </span>
+          <h1 class="hero-title">
+            Your business,<br />
+            <em>understood.</em>
+          </h1>
+          <p class="hero-sub">
+            Pliex records what's happening in your business, explains what it means,
+            and tells you what to do next — all in one calm, AI-powered place.
+          </p>
+          <div class="hero-actions">
+            <a href="dashboard.html" class="btn btn-primary btn-lg">Open dashboard</a>
+            <a href="#how" class="btn btn-link">See how it works →</a>
+          </div>
+          <div class="trust">
+            <div class="stars">★★★★★</div>
+            <p>Loved by 2,300+ small business owners</p>
+          </div>
+        </div>
+
+        <!-- Mock dashboard card -->
+        <div class="hero-visual">
+          <div class="dashboard-card">
+            <div class="dashboard-head">
+              <div class="window-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="window-title">Pliex · Today</div>
+            </div>
+
+            <div class="dashboard-body">
+              <div class="stat-row">
+                <div class="stat">
+                  <span class="stat-label">Sales</span>
+                  <span class="stat-value">$4,820</span>
+                  <span class="stat-trend up">+12.4%</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Expenses</span>
+                  <span class="stat-value">$1,210</span>
+                  <span class="stat-trend down">−3.1%</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Profit</span>
+                  <span class="stat-value">$3,610</span>
+                  <span class="stat-trend up">+18.0%</span>
+                </div>
+              </div>
+
+              <div class="chart">
+                <svg viewBox="0 0 320 120" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="line-grad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#7fb3d5" stop-opacity="0.55" />
+                      <stop offset="100%" stop-color="#7fb3d5" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M0,90 L40,72 L80,80 L120,55 L160,62 L200,38 L240,45 L280,22 L320,30 L320,120 L0,120 Z" fill="url(#line-grad)" />
+                  <path d="M0,90 L40,72 L80,80 L120,55 L160,62 L200,38 L240,45 L280,22 L320,30" fill="none" stroke="#1f4e79" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+
+              <div class="ai-bubble">
+                <div class="ai-avatar">AI</div>
+                <div class="ai-text">
+                  <strong>Tuesdays are your best day.</strong>
+                  Try a small promo on Mondays — you could lift weekly sales by ~9%.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="floating-tag tag-1">Inventory low: 3 items</div>
+          <div class="floating-tag tag-2">Auto-categorized 24 expenses</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOGOS / SOCIAL PROOF -->
+    <section class="logos">
+      <div class="container">
+        <p class="logos-label">Built for shops, cafés, studios, and service businesses</p>
+        <div class="logo-row">
+          <span>BLUE HARBOR CO.</span>
+          <span>NORTHWIND BAKERY</span>
+          <span>MERIDIAN STUDIO</span>
+          <span>LANTERN &amp; CO.</span>
+          <span>RIVERSIDE GOODS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow"><span class="dot"></span> What it does</span>
+          <h2 class="section-title">One place to <em>run</em> the business.</h2>
+          <p class="section-sub">
+            No more spreadsheets, sticky notes, or guessing.
+            Pliex brings your numbers, your insights, and your AI assistant together.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
+            </div>
+            <h3>Track sales &amp; expenses</h3>
+            <p>Log income and costs in seconds. Pliex auto-categorizes everything so your books stay tidy.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+            </div>
+            <h3>Simple dashboards</h3>
+            <p>Real-time view of how the business is doing — clean, calm, and easy to read at a glance.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12a9 9 0 1 1-3.8-7.34"/><path d="M21 4v5h-5"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3>Inventory awareness</h3>
+            <p>Know what's running low before customers do. Pliex watches stock and nudges you in time.</p>
+          </article>
+
+          <article class="feature-card highlight">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.2 4.2l2.1 2.1"/><path d="M17.7 17.7l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><circle cx="12" cy="12" r="5"/></svg>
+            </div>
+            <h3>Ask your AI assistant</h3>
+            <p>"How were sales last week?" "What should I reorder?" Get clear answers in plain language.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.39 4.84L20 8l-4 3.9.94 5.5L12 14.77 7.06 17.4 8 11.9 4 8l5.61-1.16L12 2z"/></svg>
+            </div>
+            <h3>Smart recommendations</h3>
+            <p>Pliex spots patterns and suggests what to improve — pricing, hours, promotions, restocks.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </div>
+            <h3>Automate routine tasks</h3>
+            <p>Receipts, reminders, weekly reports — done for you, so you can focus on customers.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how" id="how">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow"><span class="dot"></span> How it works</span>
+          <h2 class="section-title">Record. Understand. <em>Act.</em></h2>
+          <p class="section-sub">Three simple steps. The same loop, every day, getting smarter as it goes.</p>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <span class="step-num">01</span>
+            <h3>Record what's happening</h3>
+            <p>Connect your sales channel or log entries by hand. Pliex collects everything in one tidy place.</p>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <h3>Understand what it means</h3>
+            <p>Dashboards and AI explanations turn raw numbers into a story you can actually read.</p>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <h3>Know what to do next</h3>
+            <p>Get clear, friendly recommendations — and let Pliex handle the routine bits for you.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="quote">
+      <div class="container">
+        <blockquote>
+          <p>
+            "It feels like having a quiet, smart partner sitting next to me.
+            I open Pliex in the morning and I just <em>know</em> what to do."
+          </p>
+          <footer>— Maren K., owner of Northwind Bakery</footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="container cta-inner">
+        <h2>Run your business with a calmer head.</h2>
+        <p>Try Pliex free for 14 days. No credit card. Cancel any time.</p>
+        <div class="cta-actions">
+          <a href="#" class="btn btn-primary btn-lg">Start free trial</a>
+          <a href="#" class="btn btn-ghost btn-lg">Talk to us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="brand">
+          <span class="brand-mark">P</span>
+          <span class="brand-name">Pliex</span>
+        </a>
+        <p>Your AI business assistant.<br/>Made for small businesses.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#">Features</a>
+        <a href="#">Pricing</a>
+        <a href="#">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 Pliex. All rights reserved.</span>
+      <span>Built with care, in nostalgic blue.</span>
+    </div>
+  </footer>
+</body>
+</html>
