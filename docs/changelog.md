@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- OAuth callback (`src/app/auth/callback/route.ts`) now anchors all
+  post-sign-in redirects to `publicEnv.siteUrl` instead of `request.url`.
+  Behind nginx, `request.url` could resolve to the bound interface
+  (`http://localhost:3000`), which sent authenticated users to a dead
+  address after Google sign-in.
+
+### Changed
+- `.env.example` no longer ships a `localhost:3000` default for
+  `NEXT_PUBLIC_SITE_URL`. Each environment must set this explicitly so
+  the value baked into the client bundle matches the deployment host.
+
 ## 0.1.0 — MVP scaffold
 
 Initial production-style MVP build.
