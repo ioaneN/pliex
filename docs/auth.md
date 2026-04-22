@@ -25,6 +25,14 @@ Owner → /sign-in → Google consent screen →
 | Decide where to land              | Same handler reads `businesses` for the user  |
 | Sign out                          | `app/auth/sign-out/route.ts`                  |
 
+> **Note on redirects.** The callback handler builds redirect URLs against
+> `publicEnv.siteUrl` (i.e. `NEXT_PUBLIC_SITE_URL`), not `request.url`.
+> When Next.js runs behind a reverse proxy without trusting forwarded
+> headers, `request.url` can resolve to the bound interface
+> (`http://localhost:3000`), which would land users on a dead address.
+> `NEXT_PUBLIC_SITE_URL` is baked into the client bundle at build time
+> and must be set per environment.
+
 ## Route protection
 
 There are two layers of protection:

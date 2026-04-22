@@ -26,6 +26,38 @@
 3. **Deploy.** Vercel will run `next build`. The first request after deploy
    will warm up the Supabase + OpenAI clients.
 
+> `NEXT_PUBLIC_SITE_URL` is **inlined into the client bundle at build
+> time** and is also used server-side by `app/auth/callback/route.ts` to
+> build post-sign-in redirects. Changing it requires a fresh build (and,
+> on a self-hosted Node deploy, a process restart).
+
+## Self-hosted (EC2 + nginx)
+
+Same env vars as above. Two extra constraints:
+
+1. **Increase nginx proxy buffers** — Supabase auth cookies overflow the
+   default header buffer and produce a 502 on `/auth/callback`:
+
+   ```nginx
+   proxy_buffer_size           128k;
+   proxy_buffers               4 256k;
+   proxy_busy_buffers_size     256k;
+   large_client_header_buffers 4 16k;
+   ```
+
+2. **Set `NEXT_PUBLIC_SITE_URL` to the public origin** (`http://<ip>` or
+   `https://<domain>`) before `npm run build`. The callback handler
+   relies on this to redirect users back to the public host instead of
+   the bound interface (`http://localhost:3000`).
+
+After changing env or code, rebuild and restart:
+
+```bash
+cd ~/app/pliex
+npm run build
+pm2 restart myapp --update-env
+```
+
 ## Local development
 
 - `cp .env.example .env.local` and fill in the same variables.
