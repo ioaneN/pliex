@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+- **Responsive app shell** (`layout/app-shell.tsx`): below `md`, the sidebar
+  is off-canvas behind a backdrop with a top-bar **menu** control; a
+  **sparkle FAB** opens the assistant in a **slide-over** sheet. From `md`
+  up, the same FAB opens a **docked** third column; the assistant stays
+  **closed until opened**; the dock is omitted on `/assistant` to avoid
+  duplicate chat. Narrowing the viewport closes the assistant; widening does
+  not auto-open it.
+- **`GET /api/assistant`** — returns recent `{ messages }` for bootstrapping
+  the dock/sheet (`docs/api.md`).
+
 ### Fixed
 - OAuth callback (`src/app/auth/callback/route.ts`) now anchors all
   post-sign-in redirects to `publicEnv.siteUrl` instead of `request.url`.

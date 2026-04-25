@@ -1,0 +1,27 @@
+# Pliex Engineering Rules
+
+## Code
+- Clean Code (Uncle Bob) principles
+- Small, single-purpose functions and components
+- Intention-revealing names everywhere
+- Separate: UI / validation / business logic / API / service / data / errors
+- No duplication — extract shared logic
+- Simple over clever
+
+## Stack
+Next.js · TypeScript · App Router · Tailwind · shadcn/ui · Supabase · OpenAI · Resend · 
+
+## Structure
+- /src/app         → pages and routes
+- /src/components  → reusable UI
+- /src/lib         → services, AI, DB, utils
+- /src/types       → shared TypeScript types
+
+## Docs
+Update the relevant .md doc on every feature or schema change.
+Docs live in /docs — never let them drift from code.
+
+## Constraints
+- Google auth only
+- Single owner, single business per MVP
+- No billing, no teams, no enterprise

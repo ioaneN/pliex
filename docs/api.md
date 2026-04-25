@@ -3,6 +3,26 @@
 The MVP has very few HTTP endpoints — most mutations happen through Server
 Actions, which Next.js handles transparently.
 
+## `GET /api/assistant`
+
+Load recent assistant messages for the signed-in owner’s business (used to
+bootstrap the mobile assistant panel).
+
+**Auth:** required.
+
+**Response 200:**
+
+```json
+{
+  "messages": [
+    { "role": "user", "content": "How were sales this week?" },
+    { "role": "assistant", "content": "…" }
+  ]
+}
+```
+
+**Errors:** `401` — not signed in; `400` — no business yet.
+
 ## `POST /api/assistant`
 
 Ask the AI assistant a question, grounded in the owner's business snapshot.

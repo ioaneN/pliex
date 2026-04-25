@@ -8,7 +8,8 @@ import {
   Boxes,
   Sparkles,
   Settings,
-  HelpCircle
+  HelpCircle,
+  X
 } from "lucide-react";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { cn } from "@/lib/utils/cn";
@@ -32,25 +33,57 @@ const INTELLIGENCE_ITEMS: NavItem[] = [
 
 interface SidebarProps {
   businessName: string;
+  className?: string;
+  /** Close mobile drawer after the user follows a nav link. */
+  onNavigate?: () => void;
+  /** When set, shows a header row with close (mobile overlay). */
+  onMobileClose?: () => void;
 }
 
-export function Sidebar({ businessName }: SidebarProps) {
+export function Sidebar({ businessName, className, onNavigate, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-[240px] flex-col gap-3 overflow-y-auto border-r border-white/5 bg-gradient-to-b from-navy-900 to-[#081627] px-3.5 py-4 text-sky-100">
-      <Link href="/dashboard" className="mx-1.5 my-0.5">
+    <aside
+      className={cn(
+        "sticky top-0 flex h-screen w-[240px] flex-col gap-3 overflow-y-auto border-r border-white/5 bg-gradient-to-b from-navy-900 to-[#081627] px-3.5 py-4 text-sky-100",
+        className
+      )}
+    >
+      {onMobileClose && (
+        <div className="flex items-center justify-between gap-2 md:hidden">
+          <span className="text-xs font-semibold uppercase tracking-wider text-sky-300/80">
+            Menu
+          </span>
+          <button
+            type="button"
+            onClick={onMobileClose}
+            aria-label="Close menu"
+            className="grid h-8 w-8 place-items-center rounded-md border border-white/15 text-sky-100 transition hover:bg-white/10"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      <Link href="/dashboard" className="mx-1.5 my-0.5" onClick={onNavigate}>
         <BrandMark className="text-white" />
       </Link>
 
       <BusinessSwitcher businessName={businessName} />
 
-      <NavSection label="Workspace" items={WORKSPACE_ITEMS} pathname={pathname} />
-      <NavSection label="Intelligence" items={INTELLIGENCE_ITEMS} pathname={pathname} />
+      <NavSection label="Workspace" items={WORKSPACE_ITEMS} pathname={pathname} onNavigate={onNavigate} />
+      <NavSection label="Intelligence" items={INTELLIGENCE_ITEMS} pathname={pathname} onNavigate={onNavigate} />
 
       <div className="mt-auto flex flex-col gap-1 border-t border-white/5 pt-3">
-        <NavLink href="/settings" label="Settings" icon={Settings} pathname={pathname} />
-        <NavLink href="/help" label="Help" icon={HelpCircle} pathname={pathname} />
+        <NavLink
+          href="/settings"
+          label="Settings"
+          icon={Settings}
+          pathname={pathname}
+          onNavigate={onNavigate}
+        />
+        <NavLink href="/help" label="Help" icon={HelpCircle} pathname={pathname} onNavigate={onNavigate} />
       </div>
     </aside>
   );
@@ -81,11 +114,13 @@ function BusinessSwitcher({ businessName }: { businessName: string }) {
 function NavSection({
   label,
   items,
-  pathname
+  pathname,
+  onNavigate
 }: {
   label: string;
   items: NavItem[];
   pathname: string;
+  onNavigate?: () => void;
 }) {
   return (
     <div className="flex flex-col gap-0.5">
@@ -93,7 +128,7 @@ function NavSection({
         {label}
       </span>
       {items.map((item) => (
-        <NavLink key={item.href} {...item} pathname={pathname} />
+        <NavLink key={item.href} {...item} pathname={pathname} onNavigate={onNavigate} />
       ))}
     </div>
   );
@@ -104,13 +139,15 @@ function NavLink({
   label,
   icon: Icon,
   badge,
-  pathname
-}: NavItem & { pathname: string }) {
+  pathname,
+  onNavigate
+}: NavItem & { pathname: string; onNavigate?: () => void }) {
   const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <Link
       href={href}
+      onClick={() => onNavigate?.()}
       className={cn(
         "relative flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] font-medium",
         "text-sky-200 transition hover:bg-white/[0.06] hover:text-white",

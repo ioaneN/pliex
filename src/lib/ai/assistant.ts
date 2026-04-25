@@ -1,5 +1,6 @@
 import "server-only";
 import { getOpenAiClient } from "@/lib/ai/openai-client";
+import { logOpenAiSdkError, mapOpenAiSdkErrorToRouteError } from "@/lib/ai/openai-error-map";
 import { serverEnv } from "@/lib/utils/env";
 import type { BusinessSnapshot } from "@/lib/services/business-snapshot";
 import type { BusinessRow } from "@/types/database";
@@ -46,20 +47,25 @@ export async function answerBusinessQuestion(input: AssistantInput): Promise<str
     })}\n\nLatest 14-day snapshot:\n${JSON.stringify(input.snapshot)}`
   };
 
-  const response = await client.chat.completions.create({
-    model: serverEnv.openAiModel,
-    temperature: 0.4,
-    max_tokens: 350,
-    messages: [
-      { role: "system", content: SYSTEM_PROMPT },
-      groundingMessage,
-      ...input.conversation.map((m) => ({ role: m.role, content: m.content })),
-      { role: "user", content: input.question }
-    ]
-  });
+  try {
+    const response = await client.chat.completions.create({
+      model: serverEnv.openAiModel,
+      temperature: 0.4,
+      max_tokens: 350,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        groundingMessage,
+        ...input.conversation.map((m) => ({ role: m.role, content: m.content })),
+        { role: "user", content: input.question }
+      ]
+    });
 
-  const text = response.choices[0]?.message?.content?.trim();
-  return text && text.length > 0 ? text : localFallbackAnswer(input);
+    const text = response.choices[0]?.message?.content?.trim();
+    return text && text.length > 0 ? text : localFallbackAnswer(input);
+  } catch (err) {
+    logOpenAiSdkError("assistant.chat.completions.create", err);
+    throw mapOpenAiSdkErrorToRouteError(err);
+  }
 }
 
 /**

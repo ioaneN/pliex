@@ -1,25 +1,38 @@
 "use client";
 
-import { Search, Bell } from "lucide-react";
+import { Search, Bell, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface TopbarProps {
   ownerName: string | null;
   ownerEmail: string;
   ownerInitial: string;
+  /** Opens the mobile navigation drawer (max-md). */
+  onMenuClick?: () => void;
 }
 
-export function Topbar({ ownerName, ownerEmail, ownerInitial }: TopbarProps) {
+export function Topbar({ ownerName, ownerEmail, ownerInitial, onMenuClick }: TopbarProps) {
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-line-soft bg-paper/85 px-5 py-2.5 backdrop-blur">
-      <div className="relative flex max-w-[480px] flex-1 items-center gap-2 rounded-md border border-line bg-white px-3 py-1.5">
-        <Search className="h-4 w-4 text-muted" />
+    <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-line-soft bg-paper/85 px-3 py-2.5 backdrop-blur sm:gap-3 sm:px-5">
+      {onMenuClick && (
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Open menu"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-line bg-white text-navy-700 transition hover:bg-sky-100 md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      )}
+
+      <div className="relative flex min-w-0 max-w-[480px] flex-1 items-center gap-2 rounded-md border border-line bg-white px-2 py-1.5 sm:px-3">
+        <Search className="h-4 w-4 shrink-0 text-muted" />
         <Input
           aria-label="Search Pliex"
           placeholder="Search transactions, inventory, or ask Pliex…"
-          className="border-none p-0 focus:ring-0"
+          className="min-w-0 border-none p-0 focus:ring-0"
         />
-        <span className="rounded border border-sky-200 bg-sky-100 px-1.5 py-0.5 text-[10px] font-semibold text-muted">
+        <span className="hidden shrink-0 rounded border border-sky-200 bg-sky-100 px-1.5 py-0.5 text-[10px] font-semibold text-muted sm:inline">
           ⌘K
         </span>
       </div>

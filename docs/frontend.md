@@ -10,10 +10,10 @@
 | `/dashboard`     | `(app)`         | Daily command center                               |
 | `/transactions`  | `(app)`         | Add sales/expenses + recent history                |
 | `/inventory`     | `(app)`         | Inventory + reorder draft                          |
-| `/assistant`     | `(app)`         | AI assistant chat                                  |
+| `/assistant`     | `(app)`         | Full-page AI assistant chat                          |
 | `/auth/callback` | route handler   | Supabase OAuth redirect target                     |
 | `/auth/sign-out` | route handler   | POST to sign out                                   |
-| `/api/assistant` | route handler   | POST `{ question }` → `{ answer }`                 |
+| `/api/assistant` | route handler   | `GET` → `{ messages }`; `POST` `{ question }` → `{ answer }` |
 | `/api/health`    | route handler   | Liveness check                                     |
 
 ## Design system
@@ -37,9 +37,9 @@ Global base styles live in `src/app/globals.css`.
 | `ui/badge.tsx`                         | Status pill (good, bad, warn, sky, brass, neutral)     |
 | `ui/eyebrow.tsx`                       | Small label-above-headline element                     |
 | `ui/brand-mark.tsx`                    | "Pliex" logo + wordmark                                |
-| `layout/sidebar.tsx`                   | Dark sidebar with active-state and business switcher   |
-| `layout/topbar.tsx`                    | Sticky search + bell + owner badge                     |
-| `layout/app-shell.tsx`                 | Authenticated chrome wrapper                           |
+| `layout/sidebar.tsx`                   | Dark sidebar; mobile off-canvas + close row; closes after nav |
+| `layout/topbar.tsx`                    | Sticky search + bell + owner badge; **hamburger** (`md:hidden`) opens mobile nav |
+| `layout/app-shell.tsx`                 | Responsive grid: **FAB** opens dock (≥`md`) or sheet (<`md`); assistant **closed by default**, nav backdrop |
 | `layout/page-header.tsx`               | Eyebrow + title + subtitle + actions                   |
 | `landing/*`                            | Hero, features, how-it-works, why-pliex, CTA           |
 | `landing/google-sign-in-button.tsx`    | Calls `supabase.auth.signInWithOAuth({ provider: "google" })` |
@@ -61,9 +61,13 @@ Global base styles live in `src/app/globals.css`.
 ## Conventions
 
 - **Server-first.** Pages are server components and fetch directly via the
-  service layer. Only forms, chat, and OAuth use `"use client"`.
+  service layer. Only forms, chat, OAuth, and the **authenticated shell**
+  use `"use client"` where needed.
 - **Data shape locality.** Each page builds the props its components need;
-  components don't fetch or import services.
+  leaf components avoid importing the service layer. **Exception:** the app
+  shell `GET /api/assistant` fetch bootstraps `AssistantChat` in the dock /
+  mobile sheet so history matches `ai_conversations` without duplicating
+  server data loaders in a client layout.
 - **Empty / loading / error states** are first-class — every list checks
   `length === 0` and every authenticated route ships an `error.tsx` /
   `loading.tsx`.
