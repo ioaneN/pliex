@@ -6,6 +6,7 @@ const STATIC_PREFIXES = ["/_next", "/favicon", "/assets", "/api/health"];
 
 function isPublic(pathname: string) {
   if (STATIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return true;
+  if (pathname.startsWith("/api/cron/")) return true;
   return PUBLIC_ROUTES.includes(pathname);
 }
 

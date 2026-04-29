@@ -44,7 +44,11 @@ export async function addSaleAction(
     revalidatePath("/dashboard");
     return { ...EMPTY_STATE, ok: true };
   } catch (err) {
-    return { ...EMPTY_STATE, formError: err instanceof Error ? err.message : "Could not save sale." };
+    console.error("[transactions] addSaleAction failed", err);
+    return {
+      ...EMPTY_STATE,
+      formError: "Could not save this sale right now. Please try again."
+    };
   }
 }
 
@@ -83,7 +87,11 @@ export async function addExpenseAction(
     revalidatePath("/dashboard");
     return { ...EMPTY_STATE, ok: true };
   } catch (err) {
-    return { ...EMPTY_STATE, formError: err instanceof Error ? err.message : "Could not save expense." };
+    console.error("[transactions] addExpenseAction failed", err);
+    return {
+      ...EMPTY_STATE,
+      formError: "Could not save this expense right now. Please try again."
+    };
   }
 }
 

@@ -3,18 +3,18 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 const STEPS = [
   {
     num: "01",
-    title: "Record what's happening",
-    body: "Connect your sales channel or log entries by hand. Pliex collects everything in one tidy place."
+    title: "Set up in minutes",
+    body: "Sign in with Google, name your venue, and start from sample data tuned for an internet café — no long forms."
   },
   {
     num: "02",
-    title: "Understand what it means",
-    body: "Dashboards and AI explanations turn raw numbers into a story you can actually read."
+    title: "Keep the numbers current",
+    body: "Log sales and expenses as you go (or connect optional POS sync from Integrations when you’re ready)."
   },
   {
     num: "03",
-    title: "Know what to do next",
-    body: "Get clear, friendly recommendations — and let Pliex handle the routine bits for you."
+    title: "Ask, decide, repeat",
+    body: "Dashboards and the AI assistant read the same snapshot — so advice matches what you see on screen."
   }
 ];
 
@@ -33,7 +33,7 @@ export function HowItWorks() {
             Record. Understand. <em className="font-medium not-italic text-navy-600">Act.</em>
           </h2>
           <p className="mt-2 text-base text-ink-soft">
-            Three simple steps. The same loop every day, getting smarter as it goes.
+            Three simple steps for any internet café owner who wants clarity without another heavy system.
           </p>
         </div>
 

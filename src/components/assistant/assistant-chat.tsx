@@ -55,7 +55,8 @@ export function AssistantChat({ initialHistory }: AssistantChatProps) {
         if (!res.ok) throw new Error(json.error ?? "Could not get an answer.");
         setMessages((prev) => [...prev, { role: "assistant", content: json.answer }]);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong.");
+        console.error("[assistant/chat] send failed", err);
+        setError("Could not get an answer right now. Please try again.");
       }
     });
   }

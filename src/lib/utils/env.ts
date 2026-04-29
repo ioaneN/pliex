@@ -29,5 +29,7 @@ export const serverEnv = {
   openAiApiKey: process.env.OPENAI_API_KEY ?? "",
   openAiModel: optional(process.env.OPENAI_MODEL, "gpt-4o-mini"),
   resendApiKey: process.env.RESEND_API_KEY ?? "",
-  resendFromEmail: optional(process.env.RESEND_FROM_EMAIL, "Pliex <noreply@pliex.app>")
+  resendFromEmail: optional(process.env.RESEND_FROM_EMAIL, "Pliex <noreply@pliex.app>"),
+  /** Optional: authorize `/api/cron/gizmo-sync` (e.g. Vercel Cron `CRON_SECRET`). */
+  cronSecret: process.env.CRON_SECRET ?? ""
 };

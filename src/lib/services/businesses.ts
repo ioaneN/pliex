@@ -1,11 +1,12 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
-import type { BusinessRow, BusinessType } from "@/types/database";
+import type { BusinessRow, BusinessType, PosSystem } from "@/types/database";
 
 export interface CreateBusinessInput {
   ownerUserId: string;
   name: string;
   businessType: BusinessType;
   currency: string;
+  posSystem?: PosSystem | null;
 }
 
 /**
@@ -34,7 +35,8 @@ export async function createBusiness(input: CreateBusinessInput): Promise<Busine
       owner_user_id: input.ownerUserId,
       name: input.name,
       business_type: input.businessType,
-      currency: input.currency
+      currency: input.currency,
+      pos_system: input.posSystem ?? null
     })
     .select("*")
     .single();

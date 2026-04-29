@@ -34,11 +34,14 @@ async function seedSales(supabase: Client, businessId: string, type: BusinessTyp
   if (!(await tableEmpty(supabase, "sales", businessId))) return;
 
   const dailyTotals = [240, 310, 540, 380, 420, 610, 290, 260, 340, 580, 410, 460, 640, 320];
-  const categories = type === "bakery"
-    ? ["Bread", "Pastries", "Cakes", "Coffee"]
-    : type === "food_shop"
-      ? ["Groceries", "Drinks", "Snacks"]
-      : ["Coffee", "Tea", "Pastries", "Sandwiches"];
+  const categories =
+    type === "internet_cafe"
+      ? ["PC time", "Snacks", "Drinks", "Game passes"]
+      : type === "bakery"
+        ? ["Bread", "Pastries", "Cakes", "Coffee"]
+        : type === "food_shop"
+          ? ["Groceries", "Drinks", "Snacks"]
+          : ["Coffee", "Tea", "Pastries", "Sandwiches"];
 
   const rows = dailyTotals.flatMap((dayTotal, dayIdx) => {
     const date = daysAgo(13 - dayIdx);
@@ -66,7 +69,13 @@ async function seedExpenses(supabase: Client, businessId: string, type: Business
     { category: "Payroll",     vendor_name: "Payroll Run",    amount: 480 },
     { category: "Marketing",   vendor_name: "Instagram Ads",  amount: 35 }
   ];
-  if (type === "cafe") baseExpenses.push({ category: "Ingredients", vendor_name: "Beans Roasters", amount: 78 });
+  if (type === "cafe" || type === "internet_cafe") {
+    baseExpenses.push({
+      category: type === "internet_cafe" ? "Supplies" : "Ingredients",
+      vendor_name: type === "internet_cafe" ? "Wholesale Energy Drinks" : "Beans Roasters",
+      amount: type === "internet_cafe" ? 92 : 78
+    });
+  }
 
   const rows = baseExpenses.flatMap((e, idx) => [
     { ...e, business_id: businessId, expense_date: daysAgo(10 - (idx % 7)), source: "manual" as const, notes: null },
@@ -79,26 +88,34 @@ async function seedExpenses(supabase: Client, businessId: string, type: Business
 async function seedInventory(supabase: Client, businessId: string, type: BusinessType) {
   if (!(await tableEmpty(supabase, "inventory_items", businessId))) return;
 
-  const items = type === "bakery"
-    ? [
-        { name: "Bread flour",    quantity: 2,  unit: "bags", reorder_threshold: 5 },
-        { name: "Butter",         quantity: 4,  unit: "kg",   reorder_threshold: 6 },
-        { name: "Sugar",          quantity: 14, unit: "kg",   reorder_threshold: 8 },
-        { name: "Eggs",           quantity: 96, unit: "pcs",  reorder_threshold: 60 },
-        { name: "Yeast",          quantity: 1,  unit: "kg",   reorder_threshold: 2 }
-      ]
-    : type === "food_shop"
+  const items =
+    type === "internet_cafe"
       ? [
-          { name: "Coffee beans", quantity: 9,  unit: "kg",   reorder_threshold: 5 },
-          { name: "Bottled water",quantity: 24, unit: "btl",  reorder_threshold: 30 },
-          { name: "Snacks",       quantity: 40, unit: "pcs",  reorder_threshold: 20 }
+          { name: "Energy drinks", quantity: 48, unit: "cans", reorder_threshold: 72 },
+          { name: "Ramen cups", quantity: 36, unit: "pcs", reorder_threshold: 24 },
+          { name: "Mouse pads", quantity: 15, unit: "pcs", reorder_threshold: 8 },
+          { name: "Headset wipes", quantity: 4, unit: "boxes", reorder_threshold: 6 }
         ]
-      : [
-          { name: "Coffee beans", quantity: 9,  unit: "kg",   reorder_threshold: 5 },
-          { name: "Milk",         quantity: 22, unit: "L",    reorder_threshold: 12 },
-          { name: "Sugar",        quantity: 14, unit: "kg",   reorder_threshold: 6 },
-          { name: "Cups",         quantity: 80, unit: "pcs",  reorder_threshold: 100 }
-        ];
+      : type === "bakery"
+        ? [
+            { name: "Bread flour", quantity: 2, unit: "bags", reorder_threshold: 5 },
+            { name: "Butter", quantity: 4, unit: "kg", reorder_threshold: 6 },
+            { name: "Sugar", quantity: 14, unit: "kg", reorder_threshold: 8 },
+            { name: "Eggs", quantity: 96, unit: "pcs", reorder_threshold: 60 },
+            { name: "Yeast", quantity: 1, unit: "kg", reorder_threshold: 2 }
+          ]
+        : type === "food_shop"
+          ? [
+              { name: "Coffee beans", quantity: 9, unit: "kg", reorder_threshold: 5 },
+              { name: "Bottled water", quantity: 24, unit: "btl", reorder_threshold: 30 },
+              { name: "Snacks", quantity: 40, unit: "pcs", reorder_threshold: 20 }
+            ]
+          : [
+              { name: "Coffee beans", quantity: 9, unit: "kg", reorder_threshold: 5 },
+              { name: "Milk", quantity: 22, unit: "L", reorder_threshold: 12 },
+              { name: "Sugar", quantity: 14, unit: "kg", reorder_threshold: 6 },
+              { name: "Cups", quantity: 80, unit: "pcs", reorder_threshold: 100 }
+            ];
 
   await supabase
     .from("inventory_items")

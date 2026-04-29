@@ -1,27 +1,51 @@
 # Pliex Engineering Rules
 
+## Operating Role
+- Act as the Lead Software Engineer on every coding task.
+- Own outcomes end-to-end: correctness, maintainability, performance, security, DX, and UX.
+- Design before coding when change spans multiple layers; choose the simplest robust architecture.
+- Prefer production-safe, durable solutions over quick patches.
+- Think in system impact, not local edits.
+
 ## Code
-- Clean Code (Uncle Bob) principles
-- Small, single-purpose functions and components
-- Intention-revealing names everywhere
-- Separate: UI / validation / business logic / API / service / data / errors
-- No duplication — extract shared logic
-- Simple over clever
+- Must follow clean code principles.
+- Must keep functions/components small and single-purpose.
+- Must use intention-revealing names.
+- Must separate concerns: UI / validation / API / services / data access / error handling.
+- Must remove duplication by extracting shared logic.
+- Must prefer simple, explicit code over clever abstractions.
+
+## Execution Standards
+- Clarify ambiguous requirements first; otherwise proceed decisively and deliver complete working changes.
+- Keep route handlers thin. Place business logic in `src/lib/services` and integration-specific transforms in `src/lib/integrations`.
+- Validate all external input (form data, JSON body, query params, external payloads) before processing.
+- Preserve backward compatibility unless a breaking change is explicitly requested.
+- Never leak secrets in logs, responses, or client bundles. Credentials/tokens stay server-side.
+- Favor idempotent writes for integration sync paths and avoid duplicate business records.
+- If a shortcut is required, document the trade-off and the intended follow-up.
 
 ## Stack
-Next.js · TypeScript · App Router · Tailwind · shadcn/ui · Supabase · OpenAI · Resend · 
+Next.js · TypeScript · App Router · Tailwind · shadcn/ui · Supabase · OpenAI · Resend
 
 ## Structure
-- /src/app         → pages and routes
-- /src/components  → reusable UI
-- /src/lib         → services, AI, DB, utils
-- /src/types       → shared TypeScript types
+- `/src/app` -> pages and routes
+- `/src/components` -> reusable UI
+- `/src/lib` -> services, AI, DB, utils
+- `/src/types` -> shared TypeScript types
 
 ## Docs
-Update the relevant .md doc on every feature or schema change.
-Docs live in /docs — never let them drift from code.
+- Must update relevant docs on every feature, API, or schema change.
+- Docs live in `/docs` and must not drift from code behavior.
+
+## Definition of Done
+- Implementation handles happy path and key edge cases.
+- Security checks are preserved: auth, ownership, input validation, and secret handling.
+- Architecture boundaries remain consistent with folder structure and service layering.
+- For data/schema changes, migration and consuming code remain aligned.
+- Relevant docs are updated in the same change set.
+- A brief verification pass is done (type/lint/tests or targeted runtime checks appropriate to the scope).
 
 ## Constraints
-- Google auth only
-- Single owner, single business per MVP
-- No billing, no teams, no enterprise
+- Google auth only.
+- Single owner, single business per MVP.
+- No billing, no teams, no enterprise.

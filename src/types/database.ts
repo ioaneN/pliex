@@ -5,7 +5,9 @@
  * Keep this file in sync with the SQL whenever the schema changes.
  */
 
-export type BusinessType = "cafe" | "bakery" | "food_shop";
+export type BusinessType = "cafe" | "bakery" | "food_shop" | "internet_cafe";
+
+export type PosSystem = "gizmo";
 
 export type TransactionSource = "manual" | "import" | "integration";
 
@@ -29,7 +31,45 @@ export interface BusinessRow {
   name: string;
   business_type: BusinessType;
   currency: string;
+  /** Present after migration `0003_gizmo_internet_cafe`; null for legacy rows. */
+  pos_system?: PosSystem | null;
   created_at: string;
+}
+
+export interface GizmoConnectionRow {
+  id: string;
+  business_id: string;
+  base_url: string;
+  api_username: string;
+  api_password: string;
+  last_sync_at: string | null;
+  last_sync_status: "ok" | "error" | null;
+  last_error: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GizmoSyncSnapshotRow {
+  id: string;
+  business_id: string;
+  captured_at: string;
+  payload: GizmoSyncPayload;
+}
+
+/** Stored in `gizmo_sync_snapshots.payload` (jsonb). */
+export interface GizmoSyncPayload {
+  normalized: GizmoNormalizedMetrics;
+  raw: Record<string, { status: number; body: unknown }>;
+  errors: string[];
+  fetchedAt: string;
+}
+
+export interface GizmoNormalizedMetrics {
+  hostsTotal: number;
+  hostsInUse: number;
+  invoiceCount: number;
+  invoiceRevenueApprox: number;
+  lowStockProductCount: number;
 }
 
 export interface SaleRow {
@@ -40,6 +80,8 @@ export interface SaleRow {
   sale_date: string;
   notes: string | null;
   source: TransactionSource;
+  /** Set for POS sync rows; unique per business when present (migration 0004). */
+  external_key: string | null;
   created_at: string;
 }
 

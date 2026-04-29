@@ -6,8 +6,9 @@ The backend is composed of:
    of Supabase. RLS does the security; services do the shape.
 2. **Pure domain logic** (`src/lib/recommendations`, `src/lib/automations`)
    — no I/O, fully unit-testable.
-3. **Integration boundaries** (`src/lib/ai`, `src/lib/email`) — thin
-   adapters around OpenAI and Resend.
+3. **Integration boundaries** (`src/lib/ai`, `src/lib/email`,
+   `src/lib/integrations/*`) — thin adapters around OpenAI, Resend, and
+   optional POS HTTP APIs.
 4. **Server Actions** (`src/app/.../actions.ts`) and **route handlers**
    (`src/app/api/*`) — orchestration only.
 
@@ -23,6 +24,7 @@ The backend is composed of:
 | `services/automations.ts`         | `listAutomations`, `setAutomationEnabled`                        |
 | `services/conversation.ts`        | `listRecentConversation`, `appendMessage`                        |
 | `services/business-snapshot.ts`   | `buildBusinessSnapshot` — single source of truth read for AI/UI  |
+| `services/gizmo.ts`               | Gizmo connection, sync, snapshots, **`applyGizmoInvoicesToSales`** upsert |
 | `services/seed-demo-data.ts`      | `seedDemoDataForBusiness` (idempotent)                           |
 
 Every service uses `createSupabaseServerClient()`, which carries the user
@@ -51,9 +53,15 @@ the dashboard never shows two competing growth ideas.
 |-------------------------------|--------|-----------------------------------------------------------|
 | `expense-categorizer.ts`      | yes    | Keyword → category fallback when owner leaves it blank    |
 | `reorder-draft.ts`            | yes    | Build a reorder line list from an inventory snapshot      |
-| `weekly-summary.ts`           | side-effect | Render + send the Monday morning email via Resend     |
+| `weekly-summary.ts`           | side-effect | Render + send weekly email via Resend (module ready; scheduler route deferred) |
 
 ## Integrations
+
+### POS (Gizmo) — `lib/integrations/gizmo/` + `lib/services/gizmo.ts`
+
+HTTP client and normalization for the venue’s Web API (when the owner
+configures a public URL under **Integrations**). See
+[`docs/features/integrations.md`](features/integrations.md).
 
 ### OpenAI — `lib/ai/`
 
@@ -77,4 +85,5 @@ exports two frozen objects:
 
 - `publicEnv` — values safe for the browser bundle (Supabase URL + anon key,
   site URL).
-- `serverEnv` — server-only secrets (service role, OpenAI, Resend).
+- `serverEnv` — server-only secrets (service role, OpenAI, Resend,
+  optional `CRON_SECRET` for secured cron routes).

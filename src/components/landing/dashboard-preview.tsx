@@ -50,8 +50,8 @@ export function DashboardPreview() {
               AI
             </div>
             <p className="text-sm text-ink-soft">
-              <strong className="text-navy-800">Tuesdays are your best day.</strong>{" "}
-              Try a small Monday promo — could lift weekly sales ~9%.
+              <strong className="text-navy-800">Eight rigs busy, snack bar trending up.</strong>{" "}
+              Shift a bundle promo to weekday evenings — last week&apos;s sales pattern leaves room to grow.
             </p>
           </div>
         </div>

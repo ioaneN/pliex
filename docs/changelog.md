@@ -3,6 +3,17 @@
 ## Unreleased
 
 ### Added
+- **Gizmo → `sales` ledger:** migration `0004_sales_external_key.sql`;
+  successful invoice sync upserts `sales` rows (`source=integration`,
+  `external_key`) so dashboard and AI match POS totals (`invoice-to-sales.ts`).
+- **Investor / client demo doc:** [`docs/demo-investor.md`](demo-investor.md).
+- **Internet café MVP:** onboarding creates `businesses.business_type =
+  'internet_cafe'` with optional `pos_system = 'gizmo'`; seed data and copy
+  target LAN-style venues. Marketing home positions Pliex for **all internet
+  cafés** (POS-agnostic messaging).
+- **Gizmo integration (optional):** `gizmo_connections`, `gizmo_sync_snapshots`,
+  `/integrations/gizmo` UI, dashboard strip, sync + cron API routes
+  (`docs/features/integrations.md`, `docs/api.md`, migration `0003`).
 - **Responsive app shell** (`layout/app-shell.tsx`): below `md`, the sidebar
   is off-canvas behind a backdrop with a top-bar **menu** control; a
   **sparkle FAB** opens the assistant in a **slide-over** sheet. From `md`
@@ -65,8 +76,9 @@ Initial production-style MVP build.
 - Recommendations engine (`lib/recommendations/engine.ts`) with four pure
   rules: Monday promo, low-stock reorder, rising expense category, quiet
   weekday.
-- Three automations: weekly summary email (Resend), low-stock reorder
-  draft (pure), expense auto-categorization (pure).
+- Three automation modules: weekly summary email renderer/sender (Resend,
+  route scheduling deferred), low-stock reorder draft (pure), expense
+  auto-categorization (pure).
 - AI integration (`lib/ai/`) with deterministic local fallback when no
   OpenAI key is configured.
 - Marketing landing site at `/`: hero, features, how-it-works, why-pliex,

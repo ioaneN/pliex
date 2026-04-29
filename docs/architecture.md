@@ -1,8 +1,9 @@
 # Architecture
 
 Pliex is a single Next.js (App Router) application backed by Supabase
-(Postgres + Google OAuth) with two outbound integrations: OpenAI for the
-assistant and Resend for the weekly email.
+(Postgres + Google OAuth) with outbound integrations: **OpenAI** for the
+assistant, **Resend** for the weekly email, and **optional HTTPS calls** to
+an owner-configured POS web API (see `lib/integrations/gizmo/`).
 
 ```
                  ┌─────────────────────────────┐
@@ -36,7 +37,7 @@ Each feature flows through clearly separated layers:
 | Server Actions   | `app/.../actions.ts`            | Form handlers; orchestrate validation + service |
 | Services         | `lib/services/*`                | Owner-scoped data access (Supabase)             |
 | Domain logic     | `lib/recommendations`, `lib/automations` | Pure functions — no I/O                |
-| Integrations     | `lib/ai`, `lib/email`           | Boundaries to OpenAI and Resend                 |
+| Integrations     | `lib/ai`, `lib/email`, `lib/integrations/*` | OpenAI, Resend, optional POS HTTP         |
 | Auth             | `lib/supabase/*`, `middleware.ts` | Session refresh + route gating                |
 | Configuration    | `lib/utils/env.ts`              | Typed env access, fail-fast                     |
 

@@ -11,60 +11,34 @@ import {
 
 const INITIAL_STATE: OnboardingFormState = { fieldErrors: {} };
 
-const BUSINESS_TYPES = [
-  { value: "cafe", label: "Café" },
-  { value: "bakery", label: "Bakery" },
-  { value: "food_shop", label: "Food shop" }
-];
-
 const CURRENCIES = ["USD", "EUR", "GBP", "CAD", "AUD", "GEL"];
-
-const TRACKING_OPTIONS = [
-  "Notebook",
-  "Spreadsheet",
-  "POS system",
-  "Bank app",
-  "Nothing yet"
-];
 
 export function OnboardingForm() {
   const [state, formAction] = useFormState(completeOnboarding, INITIAL_STATE);
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
+      <input type="hidden" name="businessType" value="internet_cafe" />
+      <input type="hidden" name="salesTracking" value="Gizmo" />
+      <input type="hidden" name="expenseTracking" value="Gizmo" />
+
       <Field label="Business name" error={state.fieldErrors.businessName}>
-        <Input name="businessName" placeholder="e.g. Northwind Bakery" required />
+        <Input name="businessName" placeholder="e.g. Pixel LAN Lounge" required />
       </Field>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <Field label="Business type" error={state.fieldErrors.businessType}>
-          <Select name="businessType" defaultValue="cafe" required>
-            {BUSINESS_TYPES.map((t) => (
-              <option key={t.value} value={t.value}>{t.label}</option>
-            ))}
-          </Select>
-        </Field>
-        <Field label="Currency" error={state.fieldErrors.currency}>
-          <Select name="currency" defaultValue="USD" required>
-            {CURRENCIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </Select>
-        </Field>
+      <div className="rounded-md border border-line bg-white/60 px-3 py-2.5 text-sm text-ink-soft">
+        <span className="font-semibold text-navy-800">Internet café</span>
+        {" · "}
+        <span className="font-semibold text-navy-800">Gizmo Suite</span>
+        <p className="mt-1 text-xs text-muted">
+          Pliex MVP is tuned for this setup. You&apos;ll connect Gizmo from the dashboard after signup.
+        </p>
       </div>
 
-      <Field label="How do you currently track sales?" error={state.fieldErrors.salesTracking}>
-        <Select name="salesTracking" defaultValue="Notebook" required>
-          {TRACKING_OPTIONS.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </Select>
-      </Field>
-
-      <Field label="How do you currently track expenses?" error={state.fieldErrors.expenseTracking}>
-        <Select name="expenseTracking" defaultValue="Notebook" required>
-          {TRACKING_OPTIONS.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
+      <Field label="Currency" error={state.fieldErrors.currency}>
+        <Select name="currency" defaultValue="USD" required>
+          {CURRENCIES.map((c) => (
+            <option key={c} value={c}>{c}</option>
           ))}
         </Select>
       </Field>
@@ -78,7 +52,7 @@ export function OnboardingForm() {
       <SubmitButton />
 
       <p className="text-center text-xs text-muted">
-        We&apos;ll seed your account with realistic sample data so you can explore right away.
+        We&apos;ll seed your account with sample data so you can explore; replace it with live Gizmo sync when you connect.
       </p>
     </form>
   );

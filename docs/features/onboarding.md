@@ -1,25 +1,30 @@
 # Feature: Onboarding
 
 Goal: turn a freshly authenticated Google user into an owner with a
-seeded, ready-to-explore business in under 30 seconds.
+seeded, ready-to-explore **internet café** business in under 30 seconds.
 
 ## Inputs
 
 - Business name
-- Business type (`cafe`, `bakery`, or `food_shop`)
-- Currency (USD by default; small currated list)
-- How the owner currently tracks sales (informational, not yet acted on)
-- How the owner currently tracks expenses (same)
+- Business type — fixed to **`internet_cafe`** (hidden field in the form)
+- Currency (USD by default; small curated list)
+- Sales / expense “tracking” fields are fixed to **`Gizmo`** for schema
+  compatibility (informational today; optional POS connection is configured
+  later under **Integrations**)
 
 ## Flow
 
 1. Owner finishes Google OAuth → `/auth/callback` → `/onboarding`
    (because no business row exists yet).
 2. `OnboardingForm` posts to the `completeOnboarding` Server Action.
-3. The action validates with `onboardingSchema` (Zod).
-4. `createBusiness()` writes the row with `owner_user_id = auth.uid()`.
+3. The action validates with `onboardingSchema` (Zod) — `businessType` must
+   be `internet_cafe`.
+4. `createBusiness()` writes the row with `owner_user_id = auth.uid()`,
+   `business_type = 'internet_cafe'`, and `pos_system = 'gizmo'` (POS
+   integration is still optional until the owner saves credentials under
+   Integrations).
 5. `seedDemoDataForBusiness()` populates 14 days of believable sales,
-   expenses, inventory tuned to the chosen business type, and the 3 default
+   expenses, inventory tuned to an internet café, and the 3 default
    automations.
 6. Action calls `redirect("/dashboard")`.
 
@@ -41,3 +46,7 @@ seed (e.g. after manual cleanup) is safe.
   owner's time more than a wizard.
 - Branding upload, hours, etc. Those belong to a future settings page —
   not the first 30 seconds.
+
+## See also
+
+- [Integrations (POS sync)](integrations.md) — optional Gizmo connection after signup.

@@ -4,23 +4,33 @@ Pliex uses Supabase (Postgres). All tables live in the `public` schema.
 
 ## Tables
 
-| Table              | Purpose                                            |
-|--------------------|----------------------------------------------------|
-| `users`            | Mirror of `auth.users`, populated by trigger       |
-| `businesses`       | One row per owner (single-business MVP invariant)  |
-| `sales`            | Manual / imported sales entries                    |
-| `expenses`         | Manual / imported expense entries                  |
-| `inventory_items`  | Item, quantity, unit, reorder threshold            |
-| `recommendations`  | Persisted recommendations (open / accepted / dismissed) |
-| `automations`      | The 3 MVP automations + on/off toggle              |
-| `ai_conversations` | Per-message chat history                           |
+| Table                  | Purpose                                            |
+|------------------------|----------------------------------------------------|
+| `users`                | Mirror of `auth.users`, populated by trigger       |
+| `businesses`           | One row per owner (single-business MVP invariant)  |
+| `sales`                | Manual / imported / integration sales entries      |
+| `expenses`             | Manual / imported / expense entries                |
+| `inventory_items`      | Item, quantity, unit, reorder threshold            |
+| `recommendations`      | Persisted recommendations (open / accepted / dismissed) |
+| `automations`          | The 3 MVP automations + on/off toggle              |
+| `ai_conversations`     | Per-message chat history                           |
+| `gizmo_connections`    | Optional POS link: public base URL + operator auth + sync metadata |
+| `gizmo_sync_snapshots` | Append-only JSON payloads from each sync          |
 
 Strict typing lives in `src/types/database.ts` and must be kept in sync
 when changing the SQL.
 
 ### `businesses.business_type`
 
-Constrained to `'cafe' | 'bakery' | 'food_shop'`.
+Constrained to `'cafe' | 'bakery' | 'food_shop' | 'internet_cafe'`.
+
+**MVP onboarding** only creates **`internet_cafe`** (legacy rows may still
+use older types).
+
+### `businesses.pos_system`
+
+Nullable; when set, constrained to **`'gizmo'`** (set at onboarding for new
+cafés). Other POS systems are not modeled yet.
 
 ### `recommendations.type`
 
@@ -28,12 +38,20 @@ Constrained to `'growth' | 'savings' | 'operations' | 'risk'`.
 
 ### `*.source` (sales/expenses)
 
-Constrained to `'manual' | 'import' | 'integration'`. Today only `manual`
-is written.
+Constrained to `'manual' | 'import' | 'integration'`. Onboarding seeds
+`manual` sales; each successful **Gizmo invoice sync** upserts rows with
+`source = 'integration'`.
+
+### `sales.external_key`
+
+Nullable text (migration **`0004_sales_external_key.sql`**). When set, must
+be unique per `business_id` (partial unique index). Used for idempotent POS
+imports, e.g. `gizmo:invoice:<id>`. Manual sales leave this **null**.
 
 ## Row Level Security
 
-All eight tables have RLS enabled.
+All owner-scoped tables (including `gizmo_connections` and
+`gizmo_sync_snapshots`) have RLS enabled.
 
 - **`users`** — a row is visible/updatable only to itself (`id = auth.uid()`).
 - **`businesses`** — owner-only (`owner_user_id = auth.uid()`).
@@ -50,11 +68,12 @@ This means:
 
 ## Triggers
 
-| Trigger                     | When                                          | Effect                                                |
-|-----------------------------|-----------------------------------------------|-------------------------------------------------------|
-| `trg_on_auth_user_created`  | After insert on `auth.users`                  | Mirrors row into `public.users`                       |
-| `trg_inventory_updated_at`  | Before update on `inventory_items`            | Sets `updated_at = now()`                             |
-| `trg_automations_updated_at`| Before update on `automations`                | Sets `updated_at = now()`                             |
+| Trigger                          | When                                          | Effect                                                |
+|----------------------------------|-----------------------------------------------|-------------------------------------------------------|
+| `trg_on_auth_user_created`       | After insert on `auth.users`                  | Mirrors row into `public.users`                       |
+| `trg_inventory_updated_at`       | Before update on `inventory_items`          | Sets `updated_at = now()`                             |
+| `trg_automations_updated_at`     | Before update on `automations`                | Sets `updated_at = now()`                             |
+| `trg_gizmo_connections_updated_at` | Before update on `gizmo_connections`        | Sets `updated_at = now()`                             |
 
 ## Seeding
 
@@ -62,10 +81,11 @@ The MVP does not have global seed SQL because data is per-business. The
 `seedDemoDataForBusiness(businessId, businessType)` function in
 `lib/services/seed-demo-data.ts` seeds:
 
-- 14 days of plausible sales across category-appropriate items.
-- ~12 expense rows across `Ingredients`, `Utilities`, `Payroll`, `Packaging`,
-  and `Marketing`.
-- Inventory items appropriate for the business type — including 1–2 items
+- 14 days of plausible sales across category-appropriate items (for
+  **`internet_cafe`**: time, snacks, drinks, passes, etc.).
+- ~12 expense rows across categories such as utilities, payroll, marketing,
+  and venue-specific lines.
+- Inventory items appropriate for the business type — including items
   intentionally below threshold so the dashboard surfaces alerts immediately.
 - The 3 default automations, all enabled.
 
@@ -74,9 +94,11 @@ business.
 
 ## Migrations
 
-| File                                       | Description                       |
-|--------------------------------------------|-----------------------------------|
-| `supabase/migrations/0001_initial_schema.sql` | Tables, indexes, triggers      |
-| `supabase/migrations/0002_row_level_security.sql` | RLS + policies + helper FN |
+| File                                         | Description                              |
+|----------------------------------------------|------------------------------------------|
+| `supabase/migrations/0001_initial_schema.sql`   | Core tables, indexes, triggers        |
+| `supabase/migrations/0002_row_level_security.sql` | RLS + policies + helper FN          |
+| `supabase/migrations/0003_gizmo_internet_cafe.sql` | Internet café type, `pos_system`, Gizmo tables + RLS |
+| `supabase/migrations/0004_sales_external_key.sql` | `sales.external_key` + unique `(business_id, external_key)` |
 
 Apply them in order via the Supabase SQL editor or the Supabase CLI.

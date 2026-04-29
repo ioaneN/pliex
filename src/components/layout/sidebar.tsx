@@ -7,6 +7,7 @@ import {
   Receipt,
   Boxes,
   Sparkles,
+  Plug,
   Settings,
   HelpCircle,
   X
@@ -24,7 +25,8 @@ interface NavItem {
 const WORKSPACE_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
   { href: "/transactions", label: "Transactions", icon: Receipt },
-  { href: "/inventory", label: "Inventory", icon: Boxes }
+  { href: "/inventory", label: "Inventory", icon: Boxes },
+  { href: "/integrations/gizmo", label: "Gizmo", icon: Plug }
 ];
 
 const INTELLIGENCE_ITEMS: NavItem[] = [

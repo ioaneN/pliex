@@ -3,8 +3,9 @@
 ## Vercel + Supabase (production)
 
 1. **Create the Supabase project.**
-   - Run `supabase/migrations/0001_initial_schema.sql` and
-     `supabase/migrations/0002_row_level_security.sql` in the SQL editor.
+   - Run `supabase/migrations/0001_initial_schema.sql`,
+     `0002_row_level_security.sql`, **`0003_gizmo_internet_cafe.sql`**, and
+     **`0004_sales_external_key.sql`** in the SQL editor (in order).
    - Authentication → Providers → enable Google with your OAuth credentials.
    - URL Configuration → add `https://<your-domain>/auth/callback`.
 
@@ -22,6 +23,11 @@
      | `OPENAI_MODEL`                    | `gpt-4o-mini` (or your preferred model)   |
      | `RESEND_API_KEY`                  | Resend                                    |
      | `RESEND_FROM_EMAIL`               | e.g. `Pliex <noreply@yourdomain.com>`     |
+     | `CRON_SECRET`                     | Random secret; Vercel Cron sends `Authorization: Bearer …` to `/api/cron/gizmo-sync` |
+
+   `CRON_SECRET` and `SUPABASE_SERVICE_ROLE_KEY` are only needed if you use
+   the hourly Gizmo batch sync. Manual **Refresh from Gizmo** works with the
+   anon key + owner session alone.
 
 3. **Deploy.** Vercel will run `next build`. The first request after deploy
    will warm up the Supabase + OpenAI clients.

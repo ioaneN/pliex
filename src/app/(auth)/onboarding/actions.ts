@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import { onboardingSchema } from "@/lib/validation/schemas";
 import { createBusiness } from "@/lib/services/businesses";
-import { seedDemoDataForBusiness } from "@/lib/services/seed-demo-data";
 import { getCurrentUser } from "@/lib/supabase/get-current-user";
 
 export interface OnboardingFormState {
@@ -31,17 +30,18 @@ export async function completeOnboarding(
   if (!user) return { fieldErrors: {}, formError: "Sign in expired. Please sign in again." };
 
   try {
-    const business = await createBusiness({
+    await createBusiness({
       ownerUserId: user.id,
       name: parsed.data.businessName,
       businessType: parsed.data.businessType,
-      currency: parsed.data.currency
+      currency: parsed.data.currency,
+      posSystem: "gizmo"
     });
-    await seedDemoDataForBusiness(business.id, parsed.data.businessType);
   } catch (err) {
+    console.error("[onboarding] createBusiness failed", err);
     return {
       fieldErrors: {},
-      formError: err instanceof Error ? err.message : "Could not create your business."
+      formError: "Could not create your workspace right now. Please try again."
     };
   }
 

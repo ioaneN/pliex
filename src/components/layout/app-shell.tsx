@@ -123,7 +123,8 @@ export function AppShell({ businessName, ownerName, ownerEmail, children }: AppS
       })
       .catch((e: unknown) => {
         if (cancelled) return;
-        setAssistantError(e instanceof Error ? e.message : "Could not load assistant");
+        console.error("[assistant/bootstrap] failed", e);
+        setAssistantError("Could not load assistant right now. Please try again.");
         setAssistantStatus("error");
       });
 

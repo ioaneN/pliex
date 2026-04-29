@@ -4,34 +4,34 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 const FEATURES = [
   {
     icon: TrendingUp,
-    title: "Track sales & expenses",
-    body: "Log income and costs in seconds. Pliex auto-categorizes everything so your books stay tidy."
+    title: "Sales & sessions in one view",
+    body: "Log time blocks, retail, and add-ons in one place so daily revenue isn’t scattered across tabs and notebooks."
   },
   {
     icon: BarChart3,
     title: "Calm dashboards",
-    body: "A real-time view of how the business is doing — easy to read at a glance over morning coffee."
+    body: "Yesterday, this week, and trends at a glance — built for owners who open early and need answers fast."
   },
   {
     icon: Boxes,
-    title: "Inventory awareness",
-    body: "Know what's running low before customers do. Pliex watches stock and nudges you in time."
+    title: "Snack bar & supplies",
+    body: "Track what’s on the shelf and what’s running low before the evening rush empties the fridge."
   },
   {
     icon: Sparkles,
     title: "Ask your AI assistant",
-    body: "\"How were sales last week?\" \"What should I reorder?\" Get clear answers in plain language.",
+    body: "\"How were sales this week?\" \"What should I reorder?\" Short, practical answers tied to the numbers in Pliex.",
     highlight: true
   },
   {
     icon: Lightbulb,
     title: "Smart recommendations",
-    body: "Pliex spots patterns and suggests what to improve — pricing, hours, promotions, restocks."
+    body: "Quiet weekday? Rising power bill? Pliex surfaces growth, savings, and risk ideas you can act on the same day."
   },
   {
     icon: Clock,
-    title: "Automate routine work",
-    body: "Receipts, reminders, weekly reports — done for you, so you can focus on customers."
+    title: "Less admin noise",
+    body: "Built-in automations (expense categorization and reorder drafts) cut admin work so you spend more time with customers."
   }
 ];
 
@@ -45,8 +45,8 @@ export function FeatureGrid() {
             One place to <em className="font-medium not-italic text-navy-600">run</em> the business.
           </h2>
           <p className="mt-2 text-base text-ink-soft">
-            No more spreadsheets, sticky notes, or guessing. Pliex brings your numbers, your insights,
-            and your AI assistant together.
+            Built for LAN lounges, gaming cafés, and school labs that sell time, snacks, and gear — without
+            forcing you to change how you already run the desk.
           </p>
         </div>
 

@@ -4,19 +4,19 @@ import { Check, X } from "lucide-react";
 const COMPARISON = [
   {
     spreadsheets: "Numbers live in three places",
-    pliex: "One place for sales, expenses and stock"
+    pliex: "One workspace for sales, expenses, and stock"
   },
   {
-    spreadsheets: "You have to interpret the data yourself",
-    pliex: "Pliex tells you what changed and why"
+    spreadsheets: "You interpret exports and gut feel alone",
+    pliex: "Dashboards and AI read the same live snapshot"
   },
   {
-    spreadsheets: "Reordering relies on memory",
-    pliex: "Low-stock alerts and reorder drafts"
+    spreadsheets: "Hard to spot weak days or creeping costs",
+    pliex: "Trends and categories surface before they hurt the month"
   },
   {
-    spreadsheets: "No clear next action on Monday morning",
-    pliex: "One growth, one savings, one risk — every day"
+    spreadsheets: "No single place for “what should I do today?”",
+    pliex: "One growth, one savings, one risk — grounded in your numbers"
   }
 ];
 
@@ -30,8 +30,8 @@ export function WhyPliex() {
             Better than spreadsheets and <em className="font-medium not-italic text-navy-600">disconnected</em> tools.
           </h2>
           <p className="mt-2 text-base text-ink-soft">
-            Most owners stitch together a notebook, a POS, a spreadsheet, and their memory.
-            Pliex replaces all of that with one calm workspace.
+            Most owners stitch together a POS, spreadsheets, and memory. Pliex is the calm layer on top —
+            summarize, nudge, and coach without replacing how you take payments today.
           </p>
         </div>
 

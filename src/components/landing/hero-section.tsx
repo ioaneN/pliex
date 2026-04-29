@@ -8,14 +8,14 @@ export function HeroSection() {
     <section className="relative pb-12 pt-14">
       <div className="container grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
         <div>
-          <Eyebrow>AI for small food businesses</Eyebrow>
+          <Eyebrow>AI for internet cafés</Eyebrow>
           <h1 className="heading-serif mt-4 text-[clamp(34px,4.6vw,56px)] leading-[1.04]">
-            Stop managing tools.<br />
-            <em className="font-medium not-italic text-navy-600">Start running your business.</em>
+            Stop juggling spreadsheets.<br />
+            <em className="font-medium not-italic text-navy-600">Start running the floor.</em>
           </h1>
           <p className="mt-3 max-w-[520px] text-base text-ink-soft">
-            Pliex is the AI operating layer for cafés, bakeries, and small food businesses.
-            It brings your numbers, stock, and next actions into one calm workspace.
+            One calm workspace for sales, expenses, stock, and daily decisions — with an assistant that
+            stays grounded in your numbers, whether you log by hand or plug in your venue&apos;s tools later.
           </p>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <Link href="/sign-in">
