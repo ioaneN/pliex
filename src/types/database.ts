@@ -7,9 +7,19 @@
 
 export type BusinessType = "cafe" | "bakery" | "food_shop" | "internet_cafe";
 
-export type PosSystem = "gizmo";
+export type PosSystem = "square";
 
 export type TransactionSource = "manual" | "import" | "integration";
+
+export type SubscriptionStatus =
+  | "incomplete"
+  | "incomplete_expired"
+  | "trialing"
+  | "active"
+  | "past_due"
+  | "canceled"
+  | "unpaid"
+  | "paused";
 
 export type RecommendationType = "growth" | "savings" | "operations" | "risk";
 
@@ -31,17 +41,24 @@ export interface BusinessRow {
   name: string;
   business_type: BusinessType;
   currency: string;
-  /** Present after migration `0003_gizmo_internet_cafe`; null for legacy rows. */
+  /** Present after POS integrations migration; null for legacy rows. */
   pos_system?: PosSystem | null;
   created_at: string;
 }
 
-export interface GizmoConnectionRow {
+export interface SquareConnectionRow {
   id: string;
   business_id: string;
-  base_url: string;
-  api_username: string;
-  api_password: string;
+  access_token: string | null;
+  refresh_token: string | null;
+  access_token_expires_at: string | null;
+  merchant_id: string | null;
+  location_id: string | null;
+  environment: "production" | "sandbox";
+  scope: string | null;
+  webhook_subscription_id: string | null;
+  connected_at: string | null;
+  disconnected_at: string | null;
   last_sync_at: string | null;
   last_sync_status: "ok" | "error" | null;
   last_error: string | null;
@@ -49,27 +66,34 @@ export interface GizmoConnectionRow {
   updated_at: string;
 }
 
-export interface GizmoSyncSnapshotRow {
+export type SafeSquareConnection = Pick<
+  SquareConnectionRow,
+  | "id"
+  | "business_id"
+  | "merchant_id"
+  | "location_id"
+  | "environment"
+  | "scope"
+  | "connected_at"
+  | "disconnected_at"
+  | "last_sync_at"
+  | "last_sync_status"
+  | "last_error"
+  | "created_at"
+  | "updated_at"
+>;
+
+export interface SubscriptionRow {
   id: string;
   business_id: string;
-  captured_at: string;
-  payload: GizmoSyncPayload;
-}
-
-/** Stored in `gizmo_sync_snapshots.payload` (jsonb). */
-export interface GizmoSyncPayload {
-  normalized: GizmoNormalizedMetrics;
-  raw: Record<string, { status: number; body: unknown }>;
-  errors: string[];
-  fetchedAt: string;
-}
-
-export interface GizmoNormalizedMetrics {
-  hostsTotal: number;
-  hostsInUse: number;
-  invoiceCount: number;
-  invoiceRevenueApprox: number;
-  lowStockProductCount: number;
+  stripe_customer_id: string;
+  stripe_subscription_id: string | null;
+  status: SubscriptionStatus;
+  price_id: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface SaleRow {

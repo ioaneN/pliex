@@ -1,9 +1,8 @@
 import { listSalesLastNDays } from "@/lib/services/sales";
 import { listExpensesLastNDays } from "@/lib/services/expenses";
 import { listInventory, selectLowStock } from "@/lib/services/inventory";
-import { getLatestGizmoNormalized } from "@/lib/services/gizmo";
 import { weekdayName } from "@/lib/utils/dates";
-import type { GizmoNormalizedMetrics, InventoryItemRow } from "@/types/database";
+import type { InventoryItemRow } from "@/types/database";
 
 /**
  * A read-only snapshot of a business' last 14 days, used as input by
@@ -29,8 +28,6 @@ export interface BusinessSnapshot {
   expensesByCategory: Array<{ category: string; thisWeek: number; lastWeek: number; deltaPct: number }>;
   inventory: InventoryItemRow[];
   lowStock: InventoryItemRow[];
-  /** Latest Gizmo Web API snapshot (null if never synced). */
-  gizmo: GizmoNormalizedMetrics | null;
 }
 
 const WEEKDAY_ORDER = [
@@ -53,11 +50,10 @@ function pctChange(current: number, previous: number): number {
 }
 
 export async function buildBusinessSnapshot(businessId: string): Promise<BusinessSnapshot> {
-  const [sales, expenses, inventory, gizmo] = await Promise.all([
+  const [sales, expenses, inventory] = await Promise.all([
     listSalesLastNDays(businessId, 14),
     listExpensesLastNDays(businessId, 14),
-    listInventory(businessId),
-    getLatestGizmoNormalized(businessId)
+    listInventory(businessId)
   ]);
 
   const todayIso = new Date().toISOString().slice(0, 10);
@@ -136,7 +132,6 @@ export async function buildBusinessSnapshot(businessId: string): Promise<Busines
     weakestWeekday,
     expensesByCategory,
     inventory,
-    lowStock: selectLowStock(inventory),
-    gizmo
+    lowStock: selectLowStock(inventory)
   };
 }

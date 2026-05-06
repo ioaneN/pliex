@@ -12,8 +12,8 @@ const HELP_TOPICS = [
     body: "Assistant replies are grounded in your current Pliex snapshot, so numbers should match dashboard totals."
   },
   {
-    title: "Gizmo sync",
-    body: "Use Integrations to connect your HTTPS tunnel URL and operator credentials, then run Refresh from Gizmo."
+    title: "Square sync",
+    body: "Use Integrations to connect your Square token and location, then run manual sync when you need fresh POS data."
   }
 ];
 
@@ -58,10 +58,10 @@ export default function HelpPage() {
             Ask Assistant
           </Link>
           <Link
-            href="/integrations/gizmo"
+            href="/integrations/square"
             className="inline-flex items-center rounded-full border border-line bg-white px-4 py-2 font-semibold text-navy-800 transition hover:bg-sky-100"
           >
-            Open Gizmo setup
+            Open Square setup
           </Link>
         </CardBody>
       </Card>

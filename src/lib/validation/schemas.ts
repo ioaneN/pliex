@@ -8,31 +8,17 @@ export const onboardingSchema = z.object({
   expenseTracking: z.string().min(1)
 });
 
-export const gizmoConnectSchema = z.object({
-  baseUrl: z
+export const squareConnectSchema = z.object({
+  accessToken: z
     .string()
-    .min(8, "Enter your Gizmo Web URL")
-    .refine(
-      (s) => {
-        try {
-          const u = new URL(s);
-          return u.protocol === "https:" || u.protocol === "http:";
-        } catch {
-          return false;
-        }
-      },
-      { message: "Must be a valid http(s) URL" }
-    ),
-  apiUsername: z
+    .min(20, "Enter a valid Square access token")
+    .max(300),
+  locationId: z
     .string()
     .max(120)
     .optional()
     .transform((s) => (s == null || s === "" ? "" : s)),
-  apiPassword: z
-    .string()
-    .max(200)
-    .optional()
-    .transform((s) => (s == null || s === "" ? "" : s))
+  environment: z.enum(["production", "sandbox"]).default("production")
 });
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>;

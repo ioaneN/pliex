@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { AppShell } from "@/components/layout/app-shell";
 import { getCurrentUser } from "@/lib/supabase/get-current-user";
 import { getOwnedBusiness } from "@/lib/services/businesses";
+import { getBillingEntitlement } from "@/lib/services/billing";
 
 /**
  * Layout for every authenticated, business-scoped page.
@@ -17,6 +19,16 @@ export default async function AuthenticatedLayout({ children }: { children: Reac
 
   const business = await getOwnedBusiness();
   if (!business) redirect("/onboarding");
+
+  const pathname = headers().get("x-pathname") ?? "";
+  const billing = await getBillingEntitlement(business.id);
+  const canAccessWhenUnpaid =
+    pathname.startsWith("/billing") ||
+    pathname.startsWith("/settings") ||
+    pathname.startsWith("/help");
+  if (!billing.isEntitled && !canAccessWhenUnpaid) {
+    redirect("/billing");
+  }
 
   const ownerName =
     (user.user_metadata?.full_name as string | undefined) ??

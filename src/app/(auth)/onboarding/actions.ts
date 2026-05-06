@@ -35,7 +35,7 @@ export async function completeOnboarding(
       name: parsed.data.businessName,
       businessType: parsed.data.businessType,
       currency: parsed.data.currency,
-      posSystem: "gizmo"
+      posSystem: "square"
     });
   } catch (err) {
     console.error("[onboarding] createBusiness failed", err);

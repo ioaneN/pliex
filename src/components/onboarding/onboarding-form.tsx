@@ -19,8 +19,8 @@ export function OnboardingForm() {
   return (
     <form action={formAction} className="flex flex-col gap-5">
       <input type="hidden" name="businessType" value="internet_cafe" />
-      <input type="hidden" name="salesTracking" value="Gizmo" />
-      <input type="hidden" name="expenseTracking" value="Gizmo" />
+      <input type="hidden" name="salesTracking" value="Square" />
+      <input type="hidden" name="expenseTracking" value="Square" />
 
       <Field label="Business name" error={state.fieldErrors.businessName}>
         <Input name="businessName" placeholder="e.g. Pixel LAN Lounge" required />
@@ -29,9 +29,9 @@ export function OnboardingForm() {
       <div className="rounded-md border border-line bg-white/60 px-3 py-2.5 text-sm text-ink-soft">
         <span className="font-semibold text-navy-800">Internet café</span>
         {" · "}
-        <span className="font-semibold text-navy-800">Gizmo Suite</span>
+        <span className="font-semibold text-navy-800">Square POS</span>
         <p className="mt-1 text-xs text-muted">
-          Pliex MVP is tuned for this setup. You&apos;ll connect Gizmo from the dashboard after signup.
+          Pliex is tuned for this setup. After signup you&apos;ll activate billing, then connect Square securely with OAuth.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export function OnboardingForm() {
       <SubmitButton />
 
       <p className="text-center text-xs text-muted">
-        We&apos;ll seed your account with sample data so you can explore; replace it with live Gizmo sync when you connect.
+        We&apos;ll seed sample data so you can explore before your Square sync replaces it with live POS sales.
       </p>
     </form>
   );

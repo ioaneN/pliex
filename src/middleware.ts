@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseMiddlewareClient } from "@/lib/supabase/middleware-client";
 
-const PUBLIC_ROUTES = ["/", "/sign-in", "/auth/callback"];
-const STATIC_PREFIXES = ["/_next", "/favicon", "/assets", "/api/health"];
+const PUBLIC_ROUTES = ["/", "/sign-in", "/auth/callback", "/terms", "/privacy"];
+const STATIC_PREFIXES = ["/_next", "/favicon", "/assets", "/api/health", "/api/webhooks"];
 
 function isPublic(pathname: string) {
   if (STATIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return true;
@@ -20,7 +20,9 @@ function isPublic(pathname: string) {
  * authenticated layout, not here, to keep middleware fast and DB-free.
  */
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-pathname", req.nextUrl.pathname);
+  const res = NextResponse.next({ request: { headers: requestHeaders } });
 
   if (isPublic(req.nextUrl.pathname)) return res;
 

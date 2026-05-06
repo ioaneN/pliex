@@ -4,8 +4,9 @@
 
 1. **Create the Supabase project.**
    - Run `supabase/migrations/0001_initial_schema.sql`,
-     `0002_row_level_security.sql`, **`0003_gizmo_internet_cafe.sql`**, and
-     **`0004_sales_external_key.sql`** in the SQL editor (in order).
+    `0002_row_level_security.sql`, `0003_internet_cafe_square.sql`,
+    `0004_sales_external_key.sql`, and `0005_paid_saas_v1.sql`
+    in the SQL editor (in order).
    - Authentication → Providers → enable Google with your OAuth credentials.
    - URL Configuration → add `https://<your-domain>/auth/callback`.
 
@@ -23,11 +24,20 @@
      | `OPENAI_MODEL`                    | `gpt-4o-mini` (or your preferred model)   |
      | `RESEND_API_KEY`                  | Resend                                    |
      | `RESEND_FROM_EMAIL`               | e.g. `Pliex <noreply@yourdomain.com>`     |
-     | `CRON_SECRET`                     | Random secret; Vercel Cron sends `Authorization: Bearer …` to `/api/cron/gizmo-sync` |
+     | `STRIPE_SECRET_KEY`               | Stripe secret key                         |
+     | `STRIPE_WEBHOOK_SECRET`           | Stripe webhook signing secret             |
+     | `STRIPE_PRICE_ID`                 | Stripe recurring price id                 |
+     | `SQUARE_APPLICATION_ID`           | Square OAuth app id                       |
+     | `SQUARE_APPLICATION_SECRET`       | Square OAuth app secret                   |
+     | `SQUARE_ENVIRONMENT`              | `production` or `sandbox`                 |
+     | `APP_ENCRYPTION_KEY`              | Long random key for encrypted POS tokens  |
+     | `CRON_SECRET`                     | Bearer secret for `/api/cron/square-sync` |
 
-   `CRON_SECRET` and `SUPABASE_SERVICE_ROLE_KEY` are only needed if you use
-   the hourly Gizmo batch sync. Manual **Refresh from Gizmo** works with the
-   anon key + owner session alone.
+   Configure Stripe webhook URL:
+   `https://<your-domain>/api/webhooks/stripe`.
+
+   Configure Square OAuth redirect URL:
+   `https://<your-domain>/api/integrations/square/oauth/callback`.
 
 3. **Deploy.** Vercel will run `next build`. The first request after deploy
    will warm up the Supabase + OpenAI clients.
@@ -76,6 +86,9 @@ pm2 restart myapp --update-env
 
 - `GET /api/health` → 200
 - Sign in with Google → ends on `/onboarding` (new) or `/dashboard` (returning)
+- New accounts without active billing are redirected to `/billing`
+- Stripe Checkout activates access after webhook delivery
+- Square OAuth connects from `/integrations/square`
 - Open `/dashboard` → KPIs, chart, summary, recommendations all render
 - Add a sale on `/transactions` → appears in "Recent activity" on `/dashboard`
 

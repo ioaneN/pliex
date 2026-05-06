@@ -8,8 +8,6 @@ import { ActivityList } from "@/components/dashboard/activity-list";
 import { SalesChart } from "@/components/dashboard/sales-chart";
 import { getOwnedBusiness } from "@/lib/services/businesses";
 import { buildBusinessSnapshot } from "@/lib/services/business-snapshot";
-import { getGizmoConnection } from "@/lib/services/gizmo";
-import { GizmoDashboardStrip } from "@/components/dashboard/gizmo-dashboard-strip";
 import { listRecentSales } from "@/lib/services/sales";
 import { listRecentExpenses } from "@/lib/services/expenses";
 import { generateRecommendations, pickTopByType } from "@/lib/recommendations/engine";
@@ -26,11 +24,10 @@ export default async function DashboardPage() {
   const ownerFirstName =
     (user?.user_metadata?.full_name as string | undefined)?.split(" ")[0] ?? "there";
 
-  const [snapshot, recentSales, recentExpenses, gizmoConnection] = await Promise.all([
+  const [snapshot, recentSales, recentExpenses] = await Promise.all([
     buildBusinessSnapshot(business.id),
     listRecentSales(business.id, 6),
-    listRecentExpenses(business.id, 6),
-    getGizmoConnection(business.id)
+    listRecentExpenses(business.id, 6)
   ]);
 
   const totals = snapshot.totals;
@@ -56,12 +53,6 @@ export default async function DashboardPage() {
       />
 
       <SummaryCard message={buildSummary(business.currency, totals, snapshot.lowStock.length)} />
-
-      <GizmoDashboardStrip
-        connection={gizmoConnection}
-        snapshot={snapshot}
-        currency={business.currency}
-      />
 
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard

@@ -7,8 +7,8 @@ The backend is composed of:
 2. **Pure domain logic** (`src/lib/recommendations`, `src/lib/automations`)
    — no I/O, fully unit-testable.
 3. **Integration boundaries** (`src/lib/ai`, `src/lib/email`,
-   `src/lib/integrations/*`) — thin adapters around OpenAI, Resend, and
-   optional POS HTTP APIs.
+   `src/lib/billing`, `src/lib/integrations/*`) — thin adapters around
+   OpenAI, Resend, Stripe, and Square.
 4. **Server Actions** (`src/app/.../actions.ts`) and **route handlers**
    (`src/app/api/*`) — orchestration only.
 
@@ -24,7 +24,8 @@ The backend is composed of:
 | `services/automations.ts`         | `listAutomations`, `setAutomationEnabled`                        |
 | `services/conversation.ts`        | `listRecentConversation`, `appendMessage`                        |
 | `services/business-snapshot.ts`   | `buildBusinessSnapshot` — single source of truth read for AI/UI  |
-| `services/gizmo.ts`               | Gizmo connection, sync, snapshots, **`applyGizmoInvoicesToSales`** upsert |
+| `services/billing.ts`             | Subscription lookup, entitlement checks, Stripe upserts           |
+| `services/square.ts`              | Square OAuth metadata + sync + `sales` upsert                     |
 | `services/seed-demo-data.ts`      | `seedDemoDataForBusiness` (idempotent)                           |
 
 Every service uses `createSupabaseServerClient()`, which carries the user
@@ -57,11 +58,17 @@ the dashboard never shows two competing growth ideas.
 
 ## Integrations
 
-### POS (Gizmo) — `lib/integrations/gizmo/` + `lib/services/gizmo.ts`
+### POS (Square) — `lib/integrations/square/` + `lib/services/square.ts`
 
-HTTP client and normalization for the venue’s Web API (when the owner
-configures a public URL under **Integrations**). See
+Square OAuth, encrypted token refresh, payment-to-ledger mapping, manual sync,
+and scheduled reconciliation under **Integrations**. See
 [`docs/features/integrations.md`](features/integrations.md).
+
+### Stripe — `lib/billing/`
+
+Stripe Checkout, Customer Portal, webhook verification, and subscription event
+mapping. Subscription state is persisted in `subscriptions` and gates app
+access through the authenticated layout.
 
 ### OpenAI — `lib/ai/`
 
@@ -85,5 +92,5 @@ exports two frozen objects:
 
 - `publicEnv` — values safe for the browser bundle (Supabase URL + anon key,
   site URL).
-- `serverEnv` — server-only secrets (service role, OpenAI, Resend,
-  optional `CRON_SECRET` for secured cron routes).
+- `serverEnv` — server-only secrets (service role, OpenAI, Resend, Stripe,
+  Square OAuth, encryption key, cron secret).

@@ -2,8 +2,8 @@
 
 Pliex is a single Next.js (App Router) application backed by Supabase
 (Postgres + Google OAuth) with outbound integrations: **OpenAI** for the
-assistant, **Resend** for the weekly email, and **optional HTTPS calls** to
-an owner-configured POS web API (see `lib/integrations/gizmo/`).
+assistant, **Resend** for the weekly email, **Stripe** for billing, and
+**Square OAuth/API** for POS sync.
 
 ```
                  ┌─────────────────────────────┐
@@ -19,11 +19,10 @@ an owner-configured POS web API (see `lib/integrations/gizmo/`).
    │   lib/recommendations  lib/automations  lib/ai     │
    └──────┬──────────────────┬─────────────────┬────────┘
           │                  │                 │
-   ┌──────▼─────┐     ┌──────▼─────┐    ┌──────▼─────┐
-   │  Supabase  │     │   OpenAI   │    │   Resend   │
-   │  Postgres  │     │   Chat API │    │   Emails   │
-   │  + Auth    │     │            │    │            │
-   └────────────┘     └────────────┘    └────────────┘
+   ┌──────▼─────┐ ┌──────▼─────┐ ┌──────▼─────┐ ┌──────▼─────┐ ┌──────▼─────┐
+   │ Supabase   │ │ OpenAI     │ │ Resend     │ │ Stripe     │ │ Square     │
+   │ DB + Auth  │ │ Chat API   │ │ Emails     │ │ Billing    │ │ POS API    │
+   └────────────┘ └────────────┘ └────────────┘ └────────────┘ └────────────┘
 ```
 
 ## Layered design
@@ -77,3 +76,5 @@ Server Actions. They:
 - **No session:** `middleware.ts` redirects to `/sign-in` with the
   originally requested URL preserved as `?redirect=`.
 - **No business yet:** The authenticated layout redirects to `/onboarding`.
+- **Inactive billing:** The authenticated layout redirects to `/billing` while
+  still allowing billing, settings, and help pages.

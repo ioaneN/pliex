@@ -3,17 +3,23 @@
 ## Unreleased
 
 ### Added
-- **Gizmo → `sales` ledger:** migration `0004_sales_external_key.sql`;
-  successful invoice sync upserts `sales` rows (`source=integration`,
-  `external_key`) so dashboard and AI match POS totals (`invoice-to-sales.ts`).
+- **Paid SaaS v1:** Stripe Checkout, Customer Portal, webhook subscription
+  handling, entitlement gating, `/billing`, and billing status in Settings.
+- **Square OAuth:** Connect with Square, encrypted token storage, refresh
+  before sync, disconnect, and hourly reconciliation cron.
+- **Customer-readiness:** Terms/Privacy starter pages, CI workflow, Vitest
+  tests for billing entitlement, Stripe mapping, and Square payment mapping.
+- **Square → `sales` ledger:** migration `0004_sales_external_key.sql`;
+  successful payment sync upserts `sales` rows (`source=integration`,
+  `external_key`) so dashboard and AI match POS totals (`payments-to-sales.ts`).
 - **Investor / client demo doc:** [`docs/demo-investor.md`](demo-investor.md).
 - **Internet café MVP:** onboarding creates `businesses.business_type =
-  'internet_cafe'` with optional `pos_system = 'gizmo'`; seed data and copy
+  'internet_cafe'` with optional `pos_system = 'square'`; seed data and copy
   target LAN-style venues. Marketing home positions Pliex for **all internet
   cafés** (POS-agnostic messaging).
-- **Gizmo integration (optional):** `gizmo_connections`, `gizmo_sync_snapshots`,
-  `/integrations/gizmo` UI, dashboard strip, sync + cron API routes
-  (`docs/features/integrations.md`, `docs/api.md`, migration `0003`).
+- **Square integration (manual sync):** `square_connections`,
+  `/integrations/square` UI, sync API routes
+  (`docs/features/integrations.md`, `docs/api.md`, migration `0003_internet_cafe_square.sql`).
 - **Responsive app shell** (`layout/app-shell.tsx`): below `md`, the sidebar
   is off-canvas behind a backdrop with a top-bar **menu** control; a
   **sparkle FAB** opens the assistant in a **slide-over** sheet. From `md`

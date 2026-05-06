@@ -14,8 +14,8 @@ Pliex uses Supabase (Postgres). All tables live in the `public` schema.
 | `recommendations`      | Persisted recommendations (open / accepted / dismissed) |
 | `automations`          | The 3 MVP automations + on/off toggle              |
 | `ai_conversations`     | Per-message chat history                           |
-| `gizmo_connections`    | Optional POS link: public base URL + operator auth + sync metadata |
-| `gizmo_sync_snapshots` | Append-only JSON payloads from each sync          |
+| `square_connections`   | Square OAuth metadata + encrypted tokens + sync metadata |
+| `subscriptions`        | Stripe subscription state and entitlement source |
 
 Strict typing lives in `src/types/database.ts` and must be kept in sync
 when changing the SQL.
@@ -29,8 +29,7 @@ use older types).
 
 ### `businesses.pos_system`
 
-Nullable; when set, constrained to **`'gizmo'`** (set at onboarding for new
-cafés). Other POS systems are not modeled yet.
+Nullable; when set, constrained to **`'square'`**.
 
 ### `recommendations.type`
 
@@ -39,19 +38,18 @@ Constrained to `'growth' | 'savings' | 'operations' | 'risk'`.
 ### `*.source` (sales/expenses)
 
 Constrained to `'manual' | 'import' | 'integration'`. Onboarding seeds
-`manual` sales; each successful **Gizmo invoice sync** upserts rows with
+`manual` sales; successful Square sync upserts rows with
 `source = 'integration'`.
 
 ### `sales.external_key`
 
 Nullable text (migration **`0004_sales_external_key.sql`**). When set, must
 be unique per `business_id` (partial unique index). Used for idempotent POS
-imports, e.g. `gizmo:invoice:<id>`. Manual sales leave this **null**.
+imports, e.g. `square:payment:<id>`. Manual sales leave this **null**.
 
 ## Row Level Security
 
-All owner-scoped tables (including `gizmo_connections` and
-`gizmo_sync_snapshots`) have RLS enabled.
+All owner-scoped tables (including `square_connections` and `subscriptions`) have RLS enabled.
 
 - **`users`** — a row is visible/updatable only to itself (`id = auth.uid()`).
 - **`businesses`** — owner-only (`owner_user_id = auth.uid()`).
@@ -73,7 +71,8 @@ This means:
 | `trg_on_auth_user_created`       | After insert on `auth.users`                  | Mirrors row into `public.users`                       |
 | `trg_inventory_updated_at`       | Before update on `inventory_items`          | Sets `updated_at = now()`                             |
 | `trg_automations_updated_at`     | Before update on `automations`                | Sets `updated_at = now()`                             |
-| `trg_gizmo_connections_updated_at` | Before update on `gizmo_connections`        | Sets `updated_at = now()`                             |
+| `trg_square_connections_updated_at` | Before update on `square_connections`       | Sets `updated_at = now()`                             |
+| `trg_subscriptions_updated_at`   | Before update on `subscriptions`              | Sets `updated_at = now()`                             |
 
 ## Seeding
 
@@ -98,7 +97,8 @@ business.
 |----------------------------------------------|------------------------------------------|
 | `supabase/migrations/0001_initial_schema.sql`   | Core tables, indexes, triggers        |
 | `supabase/migrations/0002_row_level_security.sql` | RLS + policies + helper FN          |
-| `supabase/migrations/0003_gizmo_internet_cafe.sql` | Internet café type, `pos_system`, Gizmo tables + RLS |
+| `supabase/migrations/0003_internet_cafe_square.sql` | Internet café type + Square POS metadata |
 | `supabase/migrations/0004_sales_external_key.sql` | `sales.external_key` + unique `(business_id, external_key)` |
+| `supabase/migrations/0005_paid_saas_v1.sql` | Stripe subscriptions + Square OAuth token fields |
 
 Apply them in order via the Supabase SQL editor or the Supabase CLI.

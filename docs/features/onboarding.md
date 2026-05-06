@@ -8,7 +8,7 @@ seeded, ready-to-explore **internet café** business in under 30 seconds.
 - Business name
 - Business type — fixed to **`internet_cafe`** (hidden field in the form)
 - Currency (USD by default; small curated list)
-- Sales / expense “tracking” fields are fixed to **`Gizmo`** for schema
+- Sales / expense “tracking” fields are fixed to **`Square`** for schema
   compatibility (informational today; optional POS connection is configured
   later under **Integrations**)
 
@@ -20,13 +20,14 @@ seeded, ready-to-explore **internet café** business in under 30 seconds.
 3. The action validates with `onboardingSchema` (Zod) — `businessType` must
    be `internet_cafe`.
 4. `createBusiness()` writes the row with `owner_user_id = auth.uid()`,
-   `business_type = 'internet_cafe'`, and `pos_system = 'gizmo'` (POS
+   `business_type = 'internet_cafe'`, and `pos_system = 'square'` (POS
    integration is still optional until the owner saves credentials under
    Integrations).
 5. `seedDemoDataForBusiness()` populates 14 days of believable sales,
    expenses, inventory tuned to an internet café, and the 3 default
    automations.
-6. Action calls `redirect("/dashboard")`.
+6. Action calls `redirect("/dashboard")`; the paid app layout redirects the
+   owner to `/billing` until Stripe marks the subscription active or trialing.
 
 ## Why we seed
 
@@ -49,4 +50,5 @@ seed (e.g. after manual cleanup) is safe.
 
 ## See also
 
-- [Integrations (POS sync)](integrations.md) — optional Gizmo connection after signup.
+- [Integrations (POS sync)](integrations.md) — Square OAuth after signup.
+- [Deployment](../deployment.md) — Stripe and Square production setup.

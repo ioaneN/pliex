@@ -1,7 +1,7 @@
 # API
 
-The MVP has very few HTTP endpoints — most mutations happen through Server
-Actions, which Next.js handles transparently.
+The paid SaaS v1 keeps user mutations in Server Actions where practical, with
+route handlers for AI, billing, Square OAuth/sync, webhooks, and cron jobs.
 
 ## `GET /api/assistant`
 
@@ -56,42 +56,65 @@ The handler:
 5. Persists the assistant message.
 6. Returns the answer.
 
-## `POST /api/integrations/gizmo/connect`
+## `POST /api/billing/checkout`
 
-Save or update the owner’s **Gizmo Web API** connection (public HTTPS base
-URL + operator credentials). Tests reachability before persisting.
+Creates a Stripe Checkout session for the signed-in owner’s business.
 
 **Auth:** required.
 
-**Body (JSON):** `{ "baseUrl": "https://…", "apiUsername": "…", "apiPassword": "…" }`
-(password may be omitted on update to keep the stored password).
+**Response 200:** `{ "url": "https://checkout.stripe.com/..." }`
 
-**Response 200:** `{ "ok": true, "message": "…", "connection": { … } }`
+## `POST /api/billing/portal`
 
-**Errors:** `401`, `400` (validation / probe failure), `422`, `500`.
+Creates a Stripe Customer Portal session for an existing customer.
 
-## `POST /api/integrations/gizmo/sync`
+**Auth:** required.
 
-Pulls host / invoice / product endpoints from the saved connection, writes a
-row to `gizmo_sync_snapshots`, **upserts matching rows into `sales`** when the
-invoice response is HTTP 2xx (see `applyGizmoInvoicesToSales`), and updates
-`gizmo_connections` sync metadata.
+**Response 200:** `{ "url": "https://billing.stripe.com/..." }`
+
+## `POST /api/webhooks/stripe`
+
+Receives Stripe subscription lifecycle events. Verifies
+`Stripe-Signature` using `STRIPE_WEBHOOK_SECRET`, then updates
+`subscriptions` with the service role client.
+
+**Auth:** Stripe webhook signature.
+
+## `GET /api/integrations/square/oauth/start`
+
+Starts Square OAuth. Creates a signed state cookie and redirects the owner to
+Square authorization.
+
+**Auth:** required.
+
+## `GET /api/integrations/square/oauth/callback`
+
+Validates Square OAuth state, exchanges `code` for tokens, stores encrypted
+tokens in `square_connections`, runs initial sync, then redirects to
+`/integrations/square`.
+
+## `POST /api/integrations/square/sync`
+
+Pulls completed payments from the saved Square connection and **upserts rows
+into `sales`** with `source = 'integration'` and stable
+`external_key = square:payment:<id>`. Re-sync is idempotent by
+`(business_id, external_key)`.
 
 **Auth:** required (owner session).
 
-**Response 200:** `{ "ok": true, "normalized": { … }, "salesApplied": <n> }`
-or `{ "ok": false, "error": "…", "salesApplied": <n> }` when snapshot saved
-but import or API failed.
+**Response 200:** `{ "ok": true, "salesApplied": <n>, "fetchedPayments": <n> }`
+or `{ "ok": false, "error": "…", ... }` when sync fails.
 
-## `GET /api/cron/gizmo-sync`
+## `POST /api/integrations/square/disconnect`
 
-Hourly batch sync for **all** `gizmo_connections` (requires
-**`SUPABASE_SERVICE_ROLE_KEY`**).
+Revokes/deletes the active Square connection metadata and clears stored tokens.
 
-**Auth:** `Authorization: Bearer <CRON_SECRET>` (must match `CRON_SECRET` in
-`serverEnv`). Public to middleware but useless without the secret.
+**Auth:** required.
 
-**Response 200:** `{ "synced": number, "errors": string[] }`
+## `GET /api/cron/square-sync`
+
+Hourly reconciliation sync for all connected Square accounts. Requires
+`Authorization: Bearer <CRON_SECRET>` and `SUPABASE_SERVICE_ROLE_KEY`.
 
 ## `GET /auth/callback?code=...&redirect=/dashboard`
 

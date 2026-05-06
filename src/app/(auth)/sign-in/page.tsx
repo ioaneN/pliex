@@ -37,7 +37,15 @@ export default async function SignInPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-muted">
-          By continuing you agree to our terms and privacy policy.
+          By continuing you agree to our{" "}
+          <Link href="/terms" className="font-medium text-navy-700 underline-offset-2 hover:underline">
+            terms
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy" className="font-medium text-navy-700 underline-offset-2 hover:underline">
+            privacy policy
+          </Link>
+          .
         </p>
       </div>
     </main>

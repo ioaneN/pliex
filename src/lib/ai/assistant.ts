@@ -28,18 +28,18 @@ Rules:
 - If the snapshot is empty, say so honestly and suggest a starting step.`;
 
 const SYSTEM_PROMPT_INTERNET_CAFE = `You are Pliex, the AI operating layer for an internet café
-that uses Gizmo Suite for POS, time billing, and PC management. Speak like a calm, plain-spoken owner coach.
+using POS-synced transactions. Speak like a calm, plain-spoken owner coach.
 
 Rules:
 - Be concise. Three to five sentences, max.
-- Ground answers in the JSON snapshot: Pliex totals plus the "gizmo" block from the last Gizmo Web API sync.
-- When "gizmo" is null, say you don't have live Gizmo data yet and suggest connecting/syncing in Integrations.
-- Never invent PC counts, invoice totals, or stock numbers — only use fields present in the snapshot.
+- Ground answers in the JSON snapshot and business profile only.
+- If integration totals look thin, suggest running a manual sync from Integrations.
+- Never invent data points that are not in the snapshot.
 - Prefer one clear next action (pricing, staffing, promos, or floor layout) over generic advice.
 - Never say "as an AI" or pad with disclaimers.`;
 
 function systemPromptFor(business: BusinessRow): string {
-  if (business.business_type === "internet_cafe" || business.pos_system === "gizmo") {
+  if (business.business_type === "internet_cafe" || business.pos_system === "square") {
     return SYSTEM_PROMPT_INTERNET_CAFE;
   }
   return SYSTEM_PROMPT_FOOD;
@@ -63,7 +63,7 @@ export async function answerBusinessQuestion(input: AssistantInput): Promise<str
       type: input.business.business_type,
       pos_system: input.business.pos_system ?? null,
       currency: input.business.currency
-    })}\n\nLatest 14-day snapshot (includes gizmo metrics when synced):\n${JSON.stringify(input.snapshot)}`
+    })}\n\nLatest 14-day snapshot:\n${JSON.stringify(input.snapshot)}`
   };
 
   try {
@@ -97,7 +97,6 @@ function localFallbackAnswer(input: AssistantInput): string {
   const t = input.snapshot.totals;
   const profit = t.profitThisWeek;
   const lowStock = input.snapshot.lowStock.length;
-  const gz = input.snapshot.gizmo;
 
   const parts = [
     `This week so far you've taken in ${formatMoney(t.salesThisWeek, input.business.currency)} and spent ${formatMoney(t.expensesThisWeek, input.business.currency)} (profit ${formatMoney(profit, input.business.currency)}).`,
@@ -109,12 +108,8 @@ function localFallbackAnswer(input: AssistantInput): string {
       : `No clear weak day yet — keep logging sales for another week.`
   ];
 
-  if (gz && (gz.hostsTotal > 0 || gz.invoiceCount > 0)) {
-    parts.push(
-      `Gizmo (last sync): ${gz.hostsInUse} of ${gz.hostsTotal} PCs in use; ~${formatMoney(gz.invoiceRevenueApprox, input.business.currency)} across ${gz.invoiceCount} invoice line(s) in the last payload; ${gz.lowStockProductCount} low-stock product(s) in Gizmo.`
-    );
-  } else if (input.business.business_type === "internet_cafe") {
-    parts.push(`Connect and sync Gizmo under Integrations to see live floor and POS numbers here.`);
+  if (input.business.business_type === "internet_cafe" || input.business.pos_system === "square") {
+    parts.push(`Run a Square sync in Integrations before decisions that depend on today's POS intake.`);
   }
 
   return parts.join(" ");

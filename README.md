@@ -1,7 +1,7 @@
 # Pliex
 
-> The AI operating layer for cafés, bakeries, and small food businesses.
-> Sales, expenses, stock, and your next action — in one calm workspace.
+> The AI operating layer for internet cafés.
+> Sales, expenses, stock, Square POS sync, billing, and your next action — in one calm workspace.
 
 Pliex is a focused, single-owner MVP. Every morning the owner signs in with
 Google and immediately sees yesterday's sales, expenses, profit, low-stock
@@ -25,13 +25,15 @@ npm install
 
 # 2. Configure environment
 cp .env.example .env.local
-# fill in NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
-# OPENAI_API_KEY (optional in dev), RESEND_API_KEY (optional in dev)
+# fill in Supabase, OpenAI, Stripe, Square OAuth, APP_ENCRYPTION_KEY, and CRON_SECRET values
 
 # 3. Apply database migrations
 # In the Supabase SQL editor, run, in order:
 #   supabase/migrations/0001_initial_schema.sql
 #   supabase/migrations/0002_row_level_security.sql
+#   supabase/migrations/0003_internet_cafe_square.sql
+#   supabase/migrations/0004_sales_external_key.sql
+#   supabase/migrations/0005_paid_saas_v1.sql
 
 # 4. Configure Google OAuth in Supabase
 # Authentication → Providers → Google → enable, paste OAuth client ID/secret

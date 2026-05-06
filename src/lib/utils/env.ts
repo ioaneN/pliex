@@ -20,7 +20,8 @@ export const publicEnv = {
   supabaseAnonKey: required(
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
+  ),
+  stripePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
 };
 
 /** Server-only env, never imported from a "use client" module. */
@@ -30,6 +31,13 @@ export const serverEnv = {
   openAiModel: optional(process.env.OPENAI_MODEL, "gpt-4o-mini"),
   resendApiKey: process.env.RESEND_API_KEY ?? "",
   resendFromEmail: optional(process.env.RESEND_FROM_EMAIL, "Pliex <noreply@pliex.app>"),
-  /** Optional: authorize `/api/cron/gizmo-sync` (e.g. Vercel Cron `CRON_SECRET`). */
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? "",
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? "",
+  stripePriceId: process.env.STRIPE_PRICE_ID ?? "",
+  squareApplicationId: process.env.SQUARE_APPLICATION_ID ?? "",
+  squareApplicationSecret: process.env.SQUARE_APPLICATION_SECRET ?? "",
+  squareEnvironment: optional(process.env.SQUARE_ENVIRONMENT, "production") as "production" | "sandbox",
+  squareWebhookSignatureKey: process.env.SQUARE_WEBHOOK_SIGNATURE_KEY ?? "",
+  appEncryptionKey: process.env.APP_ENCRYPTION_KEY ?? "",
   cronSecret: process.env.CRON_SECRET ?? ""
 };

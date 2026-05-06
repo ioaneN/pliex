@@ -34,14 +34,12 @@ not to the desktop dock.
 ## Grounding
 
 Every request rebuilds a fresh `BusinessSnapshot` and passes it to OpenAI
-as a system message (including the **`gizmo`** block when the latest POS
-sync produced metrics — otherwise `null`).
+as a system message.
 
 The system prompt depends on the business:
 
-- **`internet_cafe`** or **`pos_system === 'gizmo'`** — internet café
-  wording; the model must use `snapshot.gizmo` when present and must not
-  invent PC or invoice counts when it is `null`.
+- **`internet_cafe`** or **`pos_system === 'square'`** — internet café
+  wording with a POS-aware next step when sync is stale.
 - **Other legacy types** — original “small food business” tone.
 
 Shared rules:

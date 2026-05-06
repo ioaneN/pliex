@@ -1,23 +1,17 @@
 import { NextResponse } from "next/server";
 import { serverEnv } from "@/lib/utils/env";
-import { syncAllGizmoConnections } from "@/lib/services/gizmo";
+import { syncAllSquareConnections } from "@/lib/services/square";
 
 export const runtime = "nodejs";
 
-/**
- * Secured with `Authorization: Bearer ${CRON_SECRET}` (Vercel Cron or manual).
- */
 export async function GET(request: Request) {
-  const secret = serverEnv.cronSecret;
-  if (!secret) {
+  if (!serverEnv.cronSecret) {
     return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 503 });
   }
-
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${secret}`) {
+  if (request.headers.get("authorization") !== `Bearer ${serverEnv.cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const result = await syncAllGizmoConnections();
+  const result = await syncAllSquareConnections();
   return NextResponse.json(result);
 }
