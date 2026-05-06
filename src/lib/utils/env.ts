@@ -20,8 +20,7 @@ export const publicEnv = {
   supabaseAnonKey: required(
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ),
-  stripePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
+  )
 };
 
 /** Server-only env, never imported from a "use client" module. */
@@ -31,9 +30,6 @@ export const serverEnv = {
   openAiModel: optional(process.env.OPENAI_MODEL, "gpt-4o-mini"),
   resendApiKey: process.env.RESEND_API_KEY ?? "",
   resendFromEmail: optional(process.env.RESEND_FROM_EMAIL, "Pliex <noreply@pliex.app>"),
-  stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? "",
-  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? "",
-  stripePriceId: process.env.STRIPE_PRICE_ID ?? "",
   squareApplicationId: process.env.SQUARE_APPLICATION_ID ?? "",
   squareApplicationSecret: process.env.SQUARE_APPLICATION_SECRET ?? "",
   squareEnvironment: optional(process.env.SQUARE_ENVIRONMENT, "production") as "production" | "sandbox",

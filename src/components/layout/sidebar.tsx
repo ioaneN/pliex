@@ -8,7 +8,6 @@ import {
   Boxes,
   Sparkles,
   Plug,
-  CreditCard,
   Settings,
   HelpCircle,
   X
@@ -27,8 +26,7 @@ const WORKSPACE_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
   { href: "/transactions", label: "Transactions", icon: Receipt },
   { href: "/inventory", label: "Inventory", icon: Boxes },
-  { href: "/integrations/square", label: "Square", icon: Plug },
-  { href: "/billing", label: "Billing", icon: CreditCard }
+  { href: "/integrations/square", label: "Square", icon: Plug }
 ];
 
 const INTELLIGENCE_ITEMS: NavItem[] = [

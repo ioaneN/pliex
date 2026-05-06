@@ -31,7 +31,7 @@ export function OnboardingForm() {
         {" · "}
         <span className="font-semibold text-navy-800">Square POS</span>
         <p className="mt-1 text-xs text-muted">
-          Pliex is tuned for this setup. After signup you&apos;ll activate billing, then connect Square securely with OAuth.
+          Pliex is tuned for this setup. After signup you&apos;ll connect Square securely with OAuth and start syncing sales.
         </p>
       </div>
 

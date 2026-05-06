@@ -21,7 +21,7 @@ export class OpenAiRouteError extends Error {
 const BY_CODE: Record<string, { status: number; message: string }> = {
   insufficient_quota: {
     status: 402,
-    message: "AI credits or quota are exhausted. Add billing or wait for your limit to reset."
+    message: "AI credits or quota are exhausted. Wait for your limit to reset and try again."
   },
   rate_limit_exceeded: {
     status: 429,

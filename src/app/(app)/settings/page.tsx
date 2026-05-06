@@ -1,10 +1,8 @@
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardBody, CardHeader, CardSubtitle, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BillingActions } from "@/components/billing/billing-actions";
 import { getCurrentUser } from "@/lib/supabase/get-current-user";
 import { getOwnedBusiness } from "@/lib/services/businesses";
-import { getBillingEntitlement } from "@/lib/services/billing";
 import { getSquareConnectionSafe } from "@/lib/services/square";
 
 export const dynamic = "force-dynamic";
@@ -12,9 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function SettingsPage() {
   const user = await getCurrentUser();
   const business = await getOwnedBusiness();
-  const [billing, square] = business
-    ? await Promise.all([getBillingEntitlement(business.id), getSquareConnectionSafe(business.id)])
-    : [null, null] as const;
+  const square = business ? await getSquareConnectionSafe(business.id) : null;
 
   return (
     <>
@@ -55,27 +51,6 @@ export default async function SettingsPage() {
           </form>
         </CardBody>
       </Card>
-
-      {billing && (
-        <Card>
-          <CardHeader>
-            <div>
-              <CardTitle>Billing</CardTitle>
-              <CardSubtitle>Subscription and payment method are managed securely by Stripe.</CardSubtitle>
-            </div>
-          </CardHeader>
-          <CardBody className="space-y-4">
-            <dl className="grid gap-3 text-sm sm:grid-cols-2">
-              <Info label="Status" value={prettyStatus(billing.status)} />
-              <Info
-                label="Renews"
-                value={billing.currentPeriodEnd ? new Date(billing.currentPeriodEnd).toLocaleDateString() : "—"}
-              />
-            </dl>
-            <BillingActions hasCustomer={!!billing.subscription?.stripe_customer_id} isEntitled={billing.isEntitled} />
-          </CardBody>
-        </Card>
-      )}
 
       <Card>
         <CardHeader>
@@ -119,9 +94,3 @@ function Info({ label, value }: { label: string; value: string }) {
   );
 }
 
-function prettyStatus(status: string): string {
-  return status
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}

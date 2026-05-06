@@ -12,11 +12,11 @@ export default function TermsPage() {
         <p className="mt-4 text-sm leading-6 text-ink-soft">
           Pliex helps business owners review sales, expenses, inventory, recommendations, and POS sync data.
           You are responsible for the accuracy of information you enter or connect, for maintaining access to
-          your Square and Stripe accounts, and for using Pliex in compliance with applicable laws.
+          your Square account, and for using Pliex in compliance with applicable laws.
         </p>
         <p className="mt-3 text-sm leading-6 text-ink-soft">
-          Subscriptions are billed through Stripe. You can manage billing from the app settings. Pliex may suspend
-          access when a subscription is canceled, unpaid, or otherwise inactive.
+          Pliex may suspend access for abusive usage, security incidents, legal obligations, or sustained platform
+          misuse.
         </p>
         <p className="mt-3 text-sm leading-6 text-ink-soft">
           For production use, replace this starter policy with counsel-reviewed terms tailored to your company,
